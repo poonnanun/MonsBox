@@ -5,7 +5,6 @@ using UnityEngine;
 public class TouchActive : MonoBehaviour
 {
     Animator animator;
-    private float counter = 0f;
 
     void Start(){
         animator = GetComponent<Animator>();
@@ -13,19 +12,13 @@ public class TouchActive : MonoBehaviour
 
     // Start is called before the first frame update
     void OnMouseDown() {
-        animator.SetBool("Touch", true);
+        animator.SetInteger("AnimState", 1);
         print("touch");
         
     }
 
-    void FixedUpdate() {
-        
-        if(animator.GetBool("Touch") == true){
-            counter += Time.deltaTime;
-            if(counter >= 0.15f){
-                counter = 0f;
-                animator.SetBool("Touch", false);
-            }
-        }
+    public void ToIdleState(){
+        animator.SetInteger("AnimState", 0);
+        print("stop");
     }
 }

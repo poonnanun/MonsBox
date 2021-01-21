@@ -9,10 +9,11 @@ public class TabToPlaceObject : MonoBehaviour
 {
     public GameObject placementIndicator;
     public GameObject objectToPlace;
-    public Image image;
+
     private Pose PlacementPose;
     private ARRaycastManager aRRaycastManager;
     private bool placementPoseIsValid = false;
+    private 
 
     void Start()
     {
@@ -30,7 +31,6 @@ public class TabToPlaceObject : MonoBehaviour
     }
     private void PlaceObject()
     {
-        image.color = Color.red;
         Instantiate(objectToPlace, placementIndicator.transform.position, placementIndicator.transform.rotation);
     }
     private void UpdatePlacementIndicator()

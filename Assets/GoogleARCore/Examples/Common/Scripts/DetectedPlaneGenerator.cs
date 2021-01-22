@@ -39,6 +39,12 @@ namespace GoogleARCore.Examples.Common
         /// used across the application to avoid per-frame allocations.
         /// </summary>
         private List<DetectedPlane> _newPlanes = new List<DetectedPlane>();
+        private bool allowGridDisplay;
+        private List<GameObject> createdPlane = new List<GameObject>();
+        private void Start()
+        {
+            allowGridDisplay = true;
+        }
 
         /// <summary>
         /// The Unity Update method.
@@ -54,14 +60,34 @@ namespace GoogleARCore.Examples.Common
             // Iterate over planes found in this frame and instantiate corresponding GameObjects to
             // visualize them.
             Session.GetTrackables<DetectedPlane>(_newPlanes, TrackableQueryFilter.New);
-            for (int i = 0; i < _newPlanes.Count; i++)
+            if (allowGridDisplay)
             {
-                // Instantiate a plane visualization prefab and set it to track the new plane. The
-                // transform is set to the origin with an identity rotation since the mesh for our
-                // prefab is updated in Unity World coordinates.
-                GameObject planeObject =
-                    Instantiate(DetectedPlanePrefab, Vector3.zero, Quaternion.identity, transform);
-                planeObject.GetComponent<DetectedPlaneVisualizer>().Initialize(_newPlanes[i]);
+                for (int i = 0; i < _newPlanes.Count; i++)
+                {
+                    // Instantiate a plane visualization prefab and set it to track the new plane. The
+                    // transform is set to the origin with an identity rotation since the mesh for our
+                    // prefab is updated in Unity World coordinates.
+                    GameObject planeObject =
+                        Instantiate(DetectedPlanePrefab, Vector3.zero, Quaternion.identity, transform);
+                    planeObject.GetComponent<DetectedPlaneVisualizer>().Initialize(_newPlanes[i]);
+                    createdPlane.Add(planeObject);
+                }
+            }
+        }
+        public void DeactiveGridDisplay()
+        {
+            allowGridDisplay = false;
+            foreach(GameObject a in createdPlane)
+            {
+                a.SetActive(false);
+            }
+        }
+        public void ActiveGridDisplay()
+        {
+            allowGridDisplay = true;
+            foreach (GameObject a in createdPlane)
+            {
+                a.SetActive(true);
             }
         }
     }

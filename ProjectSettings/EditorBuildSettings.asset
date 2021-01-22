@@ -6,10 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 2fc2a37b4b6c24f4d9451319f4dd0530
+  - enabled: 1
     path: Assets/Scenes/ArScene.unity
     guid: 5d57be41822af0e4c8a50a0483866bc6
   m_configObjects:
-    UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: cf20bf3cc632e974192bb64066db0fcb,
+    UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 339880e981cbaba41bec527565a4fbb7,
       type: 2}
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: a5fd4395d7a52344897ff193a6268cb7,
+      type: 2}
+    com.unity.xr.magicleap.magic_leap_settings: {fileID: 11400000, guid: 39961ab97332a60408339804ea117bae,
+      type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 9a7e582d3b198a848a05af45177b787a,
       type: 2}

@@ -1,17 +1,8 @@
 fileFormatVersion: 2
-guid: 648487ffa03db364f801cf099a2eac76
+guid: 70eca6729d2d1014d8f65fc57a9b3743
 ModelImporter:
   serializedVersion: 20101
-  internalIDToNameTable:
-  - first:
-      74: 5119621624317320342
-    second: SlimeBody|Slime-ControlAction
-  - first:
-      74: -6240868464890460790
-    second: SlimeBody|SlimeBodyAction
-  - first:
-      74: -4798388642909699804
-    second: SlimeBody|SlimeBodyAction.001
+  internalIDToNameTable: []
   externalObjects: {}
   materials:
     materialImportMode: 1

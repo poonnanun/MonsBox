@@ -673,6 +673,8 @@ MonoBehaviour:
   mainPanel: {fileID: 1440702031}
   hintPanel: {fileID: 1289005463}
   planeGenerator: {fileID: 361832306}
+  planeIndicator: {fileID: 1714133676964334592, guid: c6dabb8d21b543a4e99ad207702ed310,
+    type: 3}
 --- !u!4 &386257817
 Transform:
   m_ObjectHideFlags: 0

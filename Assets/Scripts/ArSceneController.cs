@@ -22,9 +22,12 @@ public class ArSceneController : MonoBehaviour
     private GameObject hintPanel;
     [SerializeField]
     private DetectedPlaneGenerator planeGenerator;
+    [SerializeField]
+    private GameObject planeIndicator;
 
     private bool isSummoned;
     private bool isGridRemoved;
+    private GameObject _currentIndicator;
 
     private const float _prefabRotation = 180.0f;
     public void Awake()
@@ -48,6 +51,23 @@ public class ArSceneController : MonoBehaviour
         if (!isSummoned)
         {
             Touch touch;
+            TrackableHit hit;
+
+            Vector3 position = FirstPersonCamera.transform.position;
+            TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon;
+            bool found = Frame.Raycast(position.x + (FirstPersonCamera.pixelWidth / 2), position.y + (FirstPersonCamera.pixelHeight / 2), raycastFilter, out hit);
+            if (found)
+            {
+                if (_currentIndicator == null)
+                {
+                    _currentIndicator = Instantiate(planeIndicator, hit.Pose.position, hit.Pose.rotation);
+                }
+                else
+                {
+                    _currentIndicator.transform.position = hit.Pose.position;
+                    _currentIndicator.transform.rotation = hit.Pose.rotation;
+                }
+            }
             if (Input.touchCount < 1 || (touch = Input.GetTouch(0)).phase != TouchPhase.Began)
             {
                 return;
@@ -58,13 +78,9 @@ public class ArSceneController : MonoBehaviour
                 return;
             }
 
-            TrackableHit hit;
-            bool foundHit = false;
-            TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon | TrackableHitFlags.FeaturePointWithSurfaceNormal;
-            foundHit = Frame.Raycast(touch.position.x, touch.position.y, raycastFilter, out hit);
-
-            if (foundHit)
+            if (found)
             {
+               
                 // Use hit pose and camera pose to check if hittest is from the
                 // back of the plane, if it is, no need to create the anchor.
                 if ((hit.Trackable is DetectedPlane) &&
@@ -75,8 +91,8 @@ public class ArSceneController : MonoBehaviour
                 }
                 else
                 {
-
                     // Choose the prefab based on the Trackable that got hit.
+                    
                     GameObject prefab;
                     if (hit.Trackable is FeaturePoint)
                     {
@@ -132,6 +148,7 @@ public class ArSceneController : MonoBehaviour
         isSummoned = true;
         mainPanel.SetActive(true);
         hintPanel.SetActive(false);
+        _currentIndicator.SetActive(false);
     }
     private void UpdateApplicationLifecycle()
     {

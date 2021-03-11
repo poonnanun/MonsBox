@@ -3,6 +3,8 @@ using GoogleARCore;
 using GoogleARCore.Examples.Common;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using TMPro;
 
 #if UNITY_EDITOR
 using Input = GoogleARCore.InstantPreviewInput;
@@ -16,12 +18,18 @@ public enum GamePhase
 }
 public class ArSceneController : MonoBehaviour
 {
+    public static ArSceneController Instance;
+
     [SerializeField]
-    private Camera FirstPersonCamera;
+    private Camera firstPersonCamera;
     [SerializeField]
-    private GameObject GameObjectHorizontalPlanePrefab;
+    private GameObject cameraObjectHoler;
     [SerializeField]
-    private GameObject GameObjectPointPrefab;
+    private GameObject worldObjectHolder;
+    [SerializeField]
+    private GameObject gameObjectHorizontalPlanePrefab;
+    [SerializeField]
+    private GameObject gameObjectPointPrefab;
     [SerializeField]
     private GameObject mainPanel;
     [SerializeField]
@@ -30,15 +38,26 @@ public class ArSceneController : MonoBehaviour
     private DetectedPlaneGenerator planeGenerator;
     [SerializeField]
     private GameObject planeIndicator;
+    [SerializeField]
+    private GameObject feedingCube;
+    [SerializeField]
+    private TextMeshProUGUI monsterName;
+    [SerializeField]
+    private Slider sensitiveXY;
 
     private bool isSummoned;
     private bool isGridRemoved;
     private GameObject _currentIndicator;
     private GamePhase _currentGamePhase;
+    private GameObject currentFeedingCube;
+    private MonsterEnvironmentController currentMonsterEnvironment;
+    private bool isAllowThrowFood;
+    private bool isFoodThrown;
 
     private const float _prefabRotation = 180.0f;
     public void Awake()
     {
+        Instance = this;
         // Enable ARCore to target 60fps camera capture frame rate on supported devices.
         // Note, Application.targetFrameRate is ignored when QualitySettings.vSyncCount != 0.
         Application.targetFrameRate = 60;
@@ -49,6 +68,7 @@ public class ArSceneController : MonoBehaviour
         isGridRemoved = false;
         mainPanel.SetActive(false);
         hintPanel.SetActive(true);
+        sensitiveXY.gameObject.SetActive(false);
     }
     // Update is called once per frame
     void Update()
@@ -63,9 +83,9 @@ public class ArSceneController : MonoBehaviour
                 Touch touch;
                 TrackableHit hit;
 
-                Vector3 position = FirstPersonCamera.transform.position;
+                Vector3 position = firstPersonCamera.transform.position;
                 TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon;
-                bool found = Frame.Raycast(position.x + (FirstPersonCamera.pixelWidth / 2), position.y + (FirstPersonCamera.pixelHeight / 2), raycastFilter, out hit);
+                bool found = Frame.Raycast(position.x + (firstPersonCamera.pixelWidth / 2), position.y + (firstPersonCamera.pixelHeight / 2), raycastFilter, out hit);
                 if (found)
                 {
                     if (_currentIndicator == null)
@@ -95,7 +115,7 @@ public class ArSceneController : MonoBehaviour
                     // Use hit pose and camera pose to check if hittest is from the
                     // back of the plane, if it is, no need to create the anchor.
                     if ((hit.Trackable is DetectedPlane) &&
-                        Vector3.Dot(FirstPersonCamera.transform.position - hit.Pose.position,
+                        Vector3.Dot(firstPersonCamera.transform.position - hit.Pose.position,
                             hit.Pose.rotation * Vector3.up) < 0)
                     {
                         Debug.Log("Hit at back of the current DetectedPlane");
@@ -107,14 +127,14 @@ public class ArSceneController : MonoBehaviour
                         GameObject prefab;
                         if (hit.Trackable is FeaturePoint)
                         {
-                            prefab = GameObjectPointPrefab;
+                            prefab = gameObjectPointPrefab;
                         }
                         else if (hit.Trackable is DetectedPlane)
                         {
                             DetectedPlane detectedPlane = hit.Trackable as DetectedPlane;
                             if (detectedPlane.PlaneType == DetectedPlaneType.HorizontalUpwardFacing)
                             {
-                                prefab = GameObjectHorizontalPlanePrefab;
+                                prefab = gameObjectHorizontalPlanePrefab;
                             }
                             else
                             {
@@ -123,14 +143,15 @@ public class ArSceneController : MonoBehaviour
                         }
                         else
                         {
-                            prefab = GameObjectHorizontalPlanePrefab;
+                            prefab = gameObjectHorizontalPlanePrefab;
                         }
 
                         // Instantiate prefab at the hit pose.
                         if (prefab != null)
                         {
-                            var gameObject = Instantiate(prefab, hit.Pose.position, hit.Pose.rotation);
-                            gameObject.transform.rotation = Quaternion.Euler(0, _prefabRotation, 0);
+                            var monsterEnvironment = Instantiate(prefab, hit.Pose.position, hit.Pose.rotation);
+                            monsterEnvironment.transform.rotation = Quaternion.Euler(0, _prefabRotation, 0);
+                            currentMonsterEnvironment = monsterEnvironment.GetComponent<MonsterEnvironmentController>();
                             //gameObject.transform.Rotate(0, _prefabRotation, 0, Space.Self);
                             var anchor = hit.Trackable.CreateAnchor(hit.Pose);
 
@@ -159,13 +180,43 @@ public class ArSceneController : MonoBehaviour
         #region Idle
         else if (_currentGamePhase == GamePhase.IdlePhase)
         {
-
+            Debug.Log("Idling...");
         }
         #endregion
         #region Feeding
         else if (_currentGamePhase == GamePhase.FeedingPhase)
         {
-
+            if (currentFeedingCube == null)
+            {
+                SpawnFood();
+            }
+            else
+            {
+                if (isFoodThrown)
+                {
+                    if (!ThrowableObject.Instance.IsMoving())
+                    {
+                        currentMonsterEnvironment.GetMonster().GetComponent<MonsterController>().MoveTo(ThrowableObject.Instance.transform.position);
+                        ChangeGamePhase(GamePhase.IdlePhase);
+                        isFoodThrown = false;
+                    }
+                }
+                if (isAllowThrowFood)
+                {
+                    if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+                    {
+                        ThrowableObject.Instance.StartTouch(Input.GetTouch(0).position);
+                    }
+                    if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended)
+                    {
+                        currentFeedingCube.transform.SetParent(worldObjectHolder.transform);
+                        ThrowableObject.Instance.StopTouch(Input.GetTouch(0).position, Mathf.Abs(currentMonsterEnvironment.GetMonsterPosition().z - firstPersonCamera.transform.position.z) * 50f);
+                        monsterName.text = ThrowableObject.Instance.GetLastThrownZ().ToString();
+                        isAllowThrowFood = false;
+                        isFoodThrown = true;
+                    }
+                }
+            }
         }
         #endregion
         #region Cleaning
@@ -206,6 +257,44 @@ public class ArSceneController : MonoBehaviour
     }
     public void EnterFeeding()
     {
+        isAllowThrowFood = false;
         ChangeGamePhase(GamePhase.FeedingPhase);
+        SpawnFood();
+        Invoke("SetIsAllowThrowFood", 0.2f);
+    }
+    public void SpawnFood()
+    {
+        isFoodThrown = false;
+        if (currentFeedingCube == null)
+        {
+            currentFeedingCube = Instantiate(feedingCube, cameraObjectHoler.transform);
+        }
+        currentFeedingCube.transform.SetParent(cameraObjectHoler.transform);
+        currentFeedingCube.transform.localPosition = new Vector3(0, -0.05f, 0.2f);
+        currentFeedingCube.transform.localRotation = Quaternion.identity;
+        currentFeedingCube.GetComponent<ThrowableObject>().SetLocation();
+        sensitiveXY.gameObject.SetActive(true);
+        sensitiveXY.value = currentFeedingCube.GetComponent<ThrowableObject>().Sensitivity;
+    }
+    public void SpawnTub()
+    {
+        currentFeedingCube.transform.SetParent(worldObjectHolder.transform);
+    }
+    public void SetIsAllowThrowFood()
+    {
+        isAllowThrowFood = true;
+    }
+    public Vector3 GetCurrentCameraPostion()
+    {
+        return firstPersonCamera.transform.position;
+    }
+    public void SetSensitivity()
+    {
+        if(currentFeedingCube != null)
+        {
+            currentFeedingCube.GetComponent<ThrowableObject>().Sensitivity = sensitiveXY.value;
+            monsterName.text = sensitiveXY.value.ToString();
+        }
+        
     }
 }

@@ -27,9 +27,7 @@ public class ArSceneController : MonoBehaviour
     [SerializeField]
     private GameObject worldObjectHolder;
     [SerializeField]
-    private GameObject gameObjectHorizontalPlanePrefab;
-    [SerializeField]
-    private GameObject gameObjectPointPrefab;
+    private GameObject monsterEnvironmentPrefabs;
     [SerializeField]
     private GameObject mainPanel;
     [SerializeField]
@@ -41,18 +39,26 @@ public class ArSceneController : MonoBehaviour
     [SerializeField]
     private GameObject feedingCube;
     [SerializeField]
+    private GameObject bathTub;
+    [SerializeField]
     private TextMeshProUGUI monsterName;
     [SerializeField]
     private Slider sensitiveXY;
+    [SerializeField]
+    private Image hungrinessBar, cleanlinessBar;
 
     private bool isSummoned;
     private bool isGridRemoved;
     private GameObject _currentIndicator;
     private GamePhase _currentGamePhase;
     private GameObject currentFeedingCube;
+    private GameObject currentBath;
     private MonsterEnvironmentController currentMonsterEnvironment;
     private bool isAllowThrowFood;
     private bool isFoodThrown;
+    private bool isAllowSpawnBath;
+    private bool isBathSpawned;
+    private bool isVariableReset;
 
     private const float _prefabRotation = 180.0f;
     public void Awake()
@@ -80,93 +86,13 @@ public class ArSceneController : MonoBehaviour
         {
             if (!isSummoned)
             {
-                Touch touch;
-                TrackableHit hit;
-
-                Vector3 position = firstPersonCamera.transform.position;
-                TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon;
-                bool found = Frame.Raycast(position.x + (firstPersonCamera.pixelWidth / 2), position.y + (firstPersonCamera.pixelHeight / 2), raycastFilter, out hit);
-                if (found)
+                if (ActiveGridAndSpawnObject(monsterEnvironmentPrefabs, out GameObject tmp) && tmp != null)
                 {
-                    if (_currentIndicator == null)
-                    {
-                        _currentIndicator = Instantiate(planeIndicator, hit.Pose.position, hit.Pose.rotation);
-                    }
-                    else
-                    {
-                        _currentIndicator.transform.position = hit.Pose.position;
-                        _currentIndicator.transform.rotation = hit.Pose.rotation;
-                    }
-                }
-                // TODO make the rotation change to camera
-                if (Input.touchCount < 1 || (touch = Input.GetTouch(0)).phase != TouchPhase.Began)
-                {
-                    return;
-                }
-                // Should not handle input if the player is pointing on UI.
-                if (EventSystem.current.IsPointerOverGameObject(touch.fingerId))
-                {
-                    return;
-                }
-
-                if (found)
-                {
-
-                    // Use hit pose and camera pose to check if hittest is from the
-                    // back of the plane, if it is, no need to create the anchor.
-                    if ((hit.Trackable is DetectedPlane) &&
-                        Vector3.Dot(firstPersonCamera.transform.position - hit.Pose.position,
-                            hit.Pose.rotation * Vector3.up) < 0)
-                    {
-                        Debug.Log("Hit at back of the current DetectedPlane");
-                    }
-                    else
-                    {
-                        // Choose the prefab based on the Trackable that got hit.
-
-                        GameObject prefab;
-                        if (hit.Trackable is FeaturePoint)
-                        {
-                            prefab = gameObjectPointPrefab;
-                        }
-                        else if (hit.Trackable is DetectedPlane)
-                        {
-                            DetectedPlane detectedPlane = hit.Trackable as DetectedPlane;
-                            if (detectedPlane.PlaneType == DetectedPlaneType.HorizontalUpwardFacing)
-                            {
-                                prefab = gameObjectHorizontalPlanePrefab;
-                            }
-                            else
-                            {
-                                prefab = null;
-                            }
-                        }
-                        else
-                        {
-                            prefab = gameObjectHorizontalPlanePrefab;
-                        }
-
-                        // Instantiate prefab at the hit pose.
-                        if (prefab != null)
-                        {
-                            var monsterEnvironment = Instantiate(prefab, hit.Pose.position, hit.Pose.rotation);
-                            monsterEnvironment.transform.rotation = Quaternion.Euler(0, _prefabRotation, 0);
-                            currentMonsterEnvironment = monsterEnvironment.GetComponent<MonsterEnvironmentController>();
-                            //gameObject.transform.Rotate(0, _prefabRotation, 0, Space.Self);
-                            var anchor = hit.Trackable.CreateAnchor(hit.Pose);
-
-                            // Make game object a child of the anchor.
-                            gameObject.transform.parent = anchor.transform;
-
-                            // Initialize Instant Placement Effect.
-                            if (hit.Trackable is InstantPlacementPoint)
-                            {
-                                gameObject.GetComponentInChildren<InstantPlacementEffect>().InitializeWithTrackable(hit.Trackable);
-                            }
-                            OnSummon();
-                        }
-
-                    }
+                    currentMonsterEnvironment = tmp.GetComponent<MonsterEnvironmentController>();
+                    isSummoned = true;
+                    mainPanel.SetActive(true);
+                    hintPanel.SetActive(false);
+                    _currentIndicator.SetActive(false);
                 }
             }
             else if (!isGridRemoved)
@@ -181,6 +107,10 @@ public class ArSceneController : MonoBehaviour
         else if (_currentGamePhase == GamePhase.IdlePhase)
         {
             Debug.Log("Idling...");
+            if (!isVariableReset)
+            {
+                ResetVariable();
+            }
         }
         #endregion
         #region Feeding
@@ -196,7 +126,9 @@ public class ArSceneController : MonoBehaviour
                 {
                     if (!ThrowableObject.Instance.IsMoving())
                     {
-                        currentMonsterEnvironment.GetMonster().GetComponent<MonsterController>().MoveTo(ThrowableObject.Instance.transform.position);
+                        MonsterController currentMons = currentMonsterEnvironment.GetMonster().GetComponent<MonsterController>();
+                        currentMons.MoveTo(ThrowableObject.Instance.transform.position);
+                        currentMons.ChanceActivity(MonsterActivity.FindFood);
                         ChangeGamePhase(GamePhase.IdlePhase);
                         isFoodThrown = false;
                     }
@@ -210,8 +142,9 @@ public class ArSceneController : MonoBehaviour
                     if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended)
                     {
                         currentFeedingCube.transform.SetParent(worldObjectHolder.transform);
-                        ThrowableObject.Instance.StopTouch(Input.GetTouch(0).position, Mathf.Abs(currentMonsterEnvironment.GetMonsterPosition().z - firstPersonCamera.transform.position.z) * 50f);
-                        monsterName.text = ThrowableObject.Instance.GetLastThrownZ().ToString();
+                        SetNameText("zDiff : " + (currentMonsterEnvironment.GetMonsterPosition().z - firstPersonCamera.transform.position.z).ToString() + " xDiff : " + (currentMonsterEnvironment.GetMonsterPosition().x - firstPersonCamera.transform.position.x).ToString());
+                        ThrowableObject.Instance.StopTouch(Input.GetTouch(0).position, (currentMonsterEnvironment.GetMonsterPosition().z - firstPersonCamera.transform.position.z) * 50f, (currentMonsterEnvironment.GetMonsterPosition().x - firstPersonCamera.transform.position.x) * 25f);
+                        // find the better algorithm for realistic aimming. may be just get distance and get the angle?
                         isAllowThrowFood = false;
                         isFoodThrown = true;
                     }
@@ -222,16 +155,26 @@ public class ArSceneController : MonoBehaviour
         #region Cleaning
         else if (_currentGamePhase == GamePhase.CleaningPhase)
         {
-
+            if (!isBathSpawned)
+            {
+                if (ActiveGridAndSpawnObject(bathTub, out GameObject tmp) && tmp != null)
+                {
+                    currentBath = tmp;
+                    isBathSpawned = true;
+                    planeGenerator.DeactiveGridDisplay();
+                    isGridRemoved = true;
+                    _currentIndicator.SetActive(false);
+                }
+            }
+            else
+            {
+                MonsterController currentMons = currentMonsterEnvironment.GetMonster().GetComponent<MonsterController>();
+                currentMons.MoveTo(currentBath.transform.position);
+                currentMons.ChanceActivity(MonsterActivity.FindBath);
+                ChangeGamePhase(GamePhase.IdlePhase);
+            }
         }
         #endregion
-    }
-    private void OnSummon()
-    {
-        isSummoned = true;
-        mainPanel.SetActive(true);
-        hintPanel.SetActive(false);
-        _currentIndicator.SetActive(false);
     }
     private void UpdateApplicationLifecycle()
     {
@@ -251,8 +194,98 @@ public class ArSceneController : MonoBehaviour
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
         }
     }
+    private bool ActiveGridAndSpawnObject(GameObject prefabs, out GameObject assignValue)
+    {
+        Touch touch;
+        assignValue = null;
+        Vector3 position = firstPersonCamera.transform.position;
+        TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon;
+        bool found = Frame.Raycast(position.x + (firstPersonCamera.pixelWidth / 2), position.y + (firstPersonCamera.pixelHeight / 2), raycastFilter, out TrackableHit hit);
+        if (found)
+        {
+            if (_currentIndicator == null)
+            {
+                _currentIndicator = Instantiate(planeIndicator, hit.Pose.position, hit.Pose.rotation);
+            }
+            else
+            {
+                _currentIndicator.transform.position = hit.Pose.position;
+                _currentIndicator.transform.rotation = hit.Pose.rotation;
+            }
+            _currentIndicator.SetActive(true);
+        }
+        // TODO make the rotation change to camera
+        if (Input.touchCount < 1 || (touch = Input.GetTouch(0)).phase != TouchPhase.Began)
+        {
+            return false;
+        }
+        // Should not handle input if the player is pointing on UI.
+        if (EventSystem.current.IsPointerOverGameObject(touch.fingerId))
+        {
+            return false;
+        }
+
+        if (found)
+        {
+            // Use hit pose and camera pose to check if hittest is from the
+            // back of the plane, if it is, no need to create the anchor.
+            if ((hit.Trackable is DetectedPlane) &&
+                Vector3.Dot(firstPersonCamera.transform.position - hit.Pose.position,
+                    hit.Pose.rotation * Vector3.up) < 0)
+            {
+                Debug.Log("Hit at back of the current DetectedPlane");
+            }
+            else
+            {
+                // Choose the prefab based on the Trackable that got hit.
+                GameObject prefab;
+                if (hit.Trackable is FeaturePoint)
+                {
+                    prefab = prefabs;
+                }
+                else if (hit.Trackable is DetectedPlane)
+                {
+                    DetectedPlane detectedPlane = hit.Trackable as DetectedPlane;
+                    if (detectedPlane.PlaneType == DetectedPlaneType.HorizontalUpwardFacing)
+                    {
+                        prefab = prefabs;
+                    }
+                    else
+                    {
+                        prefab = null;
+                    }
+                }
+                else
+                {
+                    prefab = prefabs;
+                }
+                // Instantiate prefab at the hit pose.
+                if (prefab != null)
+                {
+                    var tmpObject = Instantiate(prefab, hit.Pose.position, hit.Pose.rotation);
+                    tmpObject.transform.rotation = Quaternion.Euler(0, _prefabRotation, 0);
+                    assignValue = tmpObject;
+                    //gameObject.transform.Rotate(0, _prefabRotation, 0, Space.Self);
+                    var anchor = hit.Trackable.CreateAnchor(hit.Pose);
+                    // Make game object a child of the anchor.
+                    gameObject.transform.parent = anchor.transform;
+                    // Initialize Instant Placement Effect.
+                    if (hit.Trackable is InstantPlacementPoint)
+                    {
+                        gameObject.GetComponentInChildren<InstantPlacementEffect>().InitializeWithTrackable(hit.Trackable);
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     public void ChangeGamePhase(GamePhase gamePhase)
     {
+        if(gamePhase == GamePhase.IdlePhase)
+        {
+            isVariableReset = false;
+        }
         _currentGamePhase = gamePhase;
     }
     public void EnterFeeding()
@@ -261,6 +294,15 @@ public class ArSceneController : MonoBehaviour
         ChangeGamePhase(GamePhase.FeedingPhase);
         SpawnFood();
         Invoke("SetIsAllowThrowFood", 0.2f);
+    }
+    public void EnterCleaning()
+    {
+        if (currentBath == null)
+        {
+            ChangeGamePhase(GamePhase.CleaningPhase);
+            planeGenerator.ActiveGridDisplay();
+            isGridRemoved = false;
+        }
     }
     public void SpawnFood()
     {
@@ -276,9 +318,28 @@ public class ArSceneController : MonoBehaviour
         sensitiveXY.gameObject.SetActive(true);
         sensitiveXY.value = currentFeedingCube.GetComponent<ThrowableObject>().Sensitivity;
     }
+    public void ResetVariable()
+    {
+        isBathSpawned = false;
+        isFoodThrown = false;
+    }
     public void SpawnTub()
     {
-        currentFeedingCube.transform.SetParent(worldObjectHolder.transform);
+        // Open indicator on the plane or grid
+        // instantiate on the indicator
+        // Make monster able to get on the tub
+        // Have raycast or something to rub the monster to increase cleanliness
+    }
+    public void DespawnBathTub()
+    {
+        GameObject tmp = currentBath;
+        currentBath = null;
+        Destroy(tmp);
+
+    }
+    public void ScanForImage()
+    {
+        // don't know how just google augmented image arcore
     }
     public void SetIsAllowThrowFood()
     {
@@ -293,8 +354,47 @@ public class ArSceneController : MonoBehaviour
         if(currentFeedingCube != null)
         {
             currentFeedingCube.GetComponent<ThrowableObject>().Sensitivity = sensitiveXY.value;
-            monsterName.text = sensitiveXY.value.ToString();
         }
-        
+    }
+    public void SetHungriness(int amount, int max)
+    {
+        float fillAmount = (float)amount / (float)max;
+        hungrinessBar.fillAmount = fillAmount;
+    }
+    public void SetCleanliness(int amount, int max)
+    {
+        float fillAmount = (float)amount / (float)max;
+        cleanlinessBar.fillAmount = fillAmount;
+    }
+    public FoodScript GetCurrentFood()
+    {
+        return currentFeedingCube.GetComponent<FoodScript>();
+    }
+    public void DestroyCurrentFood()
+    {
+        GameObject tmp = currentFeedingCube;
+        currentFeedingCube = null;
+        Destroy(tmp);
+    }
+    public void SetNameText(string word)
+    {
+        monsterName.text = word;
+    }
+    public void DevDropFood()
+    {
+        if(currentFeedingCube != null)
+        {
+            currentFeedingCube.transform.SetParent(worldObjectHolder.transform);
+            ThrowableObject.Instance.DevDrop();
+            isAllowThrowFood = false;
+            isFoodThrown = true;
+        }
+    }
+    public void DevFinishBath()
+    {
+        if (currentBath != null)
+        {
+            currentBath.GetComponent<BathScript>().ExitBathTub();
+        }
     }
 }

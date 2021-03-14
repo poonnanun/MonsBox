@@ -50,7 +50,7 @@ public class TestGameController : MonoBehaviour
                 if (Input.GetMouseButtonUp(0))
                 {
                     currentFeedingCube.transform.SetParent(worldObjectHolder.transform);
-                    ThrowableObject.Instance.StopTouch(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0), Mathf.Abs(currentMonster.transform.position.z - cam.transform.position.z) * 50f);
+                    ThrowableObject.Instance.StopTouch(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0), Mathf.Abs(currentMonster.transform.position.z - cam.transform.position.z) * 50f, 0);
                     isThrown = true;
                 }
             }

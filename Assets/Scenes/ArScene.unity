@@ -724,9 +724,7 @@ MonoBehaviour:
   firstPersonCamera: {fileID: 1716485980}
   cameraObjectHoler: {fileID: 1067297012}
   worldObjectHolder: {fileID: 1809644101}
-  gameObjectHorizontalPlanePrefab: {fileID: 3836802920120424175, guid: 0b32788936093f74082db98764eaccb2,
-    type: 3}
-  gameObjectPointPrefab: {fileID: 3836802920120424175, guid: 0b32788936093f74082db98764eaccb2,
+  monsterEnvironmentPrefabs: {fileID: 3836802920120424175, guid: 0b32788936093f74082db98764eaccb2,
     type: 3}
   mainPanel: {fileID: 1440702031}
   hintPanel: {fileID: 1289005463}
@@ -735,8 +733,11 @@ MonoBehaviour:
     type: 3}
   feedingCube: {fileID: 326326666486168985, guid: 2c85aa3a424806a4282dcddcd96f86d7,
     type: 3}
+  bathTub: {fileID: 4185168531888777368, guid: 69aedbf4a73ee1f4f90ab057714cb872, type: 3}
   monsterName: {fileID: 173311741}
   sensitiveXY: {fileID: 2123811566}
+  hungrinessBar: {fileID: 1898822003}
+  cleanlinessBar: {fileID: 908932222}
 --- !u!4 &386257817
 Transform:
   m_ObjectHideFlags: 0
@@ -2030,7 +2031,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2071550925}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 386257816}
+        m_TargetAssemblyTypeName: ArSceneController, Assembly-CSharp
+        m_MethodName: DevFinishBath
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &1292615830
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2573,7 +2586,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 386257816}
         m_TargetAssemblyTypeName: ArSceneController, Assembly-CSharp
-        m_MethodName: SpawnTub
+        m_MethodName: EnterCleaning
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2790,7 +2803,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 736935410}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 386257816}
+        m_TargetAssemblyTypeName: ArSceneController, Assembly-CSharp
+        m_MethodName: DevDropFood
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &1638872587
 CanvasRenderer:
   m_ObjectHideFlags: 0

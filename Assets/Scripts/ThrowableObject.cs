@@ -33,7 +33,7 @@ public class ThrowableObject : MonoBehaviour
         timeStart = Time.deltaTime;
         startPos = touchPos;
     }
-    public void StopTouch(Vector3 touchPos, float zPos)
+    public void StopTouch(Vector3 touchPos, float zPos, float xPos)
     {
         lastThrownZ = zPos;
         timeEnd = Time.deltaTime;
@@ -42,7 +42,12 @@ public class ThrowableObject : MonoBehaviour
         direction = startPos - endPos;
 
         rb.isKinematic = false;
-        rb.AddForce(-direction.x * throwForceXY, -direction.y * throwForceXY, zPos);
+        rb.AddForce((-direction.x * throwForceXY)+xPos, -direction.y * throwForceXY, zPos);
+    }
+    public  void DevDrop()
+    {
+        rb.isKinematic = false;
+        rb.AddForce(Vector3.forward, ForceMode.Impulse);
     }
     public void SetAllowThrow(bool allow)
     {

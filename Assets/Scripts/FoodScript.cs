@@ -4,15 +4,20 @@ using UnityEngine;
 
 public class FoodScript : MonoBehaviour
 {
+    private int fullnessAmount;
+    private int price;
+    public int FullnessAmount { get => fullnessAmount; set => fullnessAmount = value; }
+    public int Price { get => price; set => price = value; }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        LoadData();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void LoadData()
     {
-        
+        FullnessAmount = 10;
+        Price = 10;
     }
 }

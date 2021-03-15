@@ -33,7 +33,7 @@ namespace GoogleARCore.Examples.Common
         /// A prefab for tracking and visualizing detected planes.
         /// </summary>
         public GameObject DetectedPlanePrefab;
-
+        public static DetectedPlaneGenerator Instance;
 
         /// <summary>
         /// A list to hold new planes ARCore began tracking in the current frame. This object is
@@ -42,6 +42,10 @@ namespace GoogleARCore.Examples.Common
         private List<DetectedPlane> _newPlanes = new List<DetectedPlane>();
         private bool allowGridDisplay;
         private List<GameObject> createdPlane = new List<GameObject>();
+        private void Awake()
+        {
+            Instance = this;
+        }
         private void Start()
         {
             allowGridDisplay = true;
@@ -89,6 +93,15 @@ namespace GoogleARCore.Examples.Common
             foreach (GameObject a in createdPlane)
             {
                 a.SetActive(true);
+            }
+        }
+        public void DestroyPlane(GameObject plane)
+        {
+            if (createdPlane.Contains(plane))
+            {
+                GameObject tmp = plane;
+                createdPlane.Remove(plane);
+                Destroy(tmp);
             }
         }
     }

@@ -64,7 +64,7 @@ namespace GoogleARCore.Examples.Common
             }
             else if (_detectedPlane.SubsumedBy != null)
             {
-                Destroy(gameObject);
+                DetectedPlaneGenerator.Instance.DestroyPlane(gameObject);
                 return;
             }
             else if (_detectedPlane.TrackingState != TrackingState.Tracking)

@@ -16,11 +16,12 @@ public class MonsterController : MonoBehaviour
     private MonsterActivity _currentActivity;
     private Vector3 moveTarget;
     private float moveSpeed, turnSpeed;
-    private float hungrinessTickSpeed, cleanlinessTickSpeed;
-    private float hungrinessCount, cleanlinessCount;
+    private float hungrinessTickSpeed, cleanlinessTickSpeed, happinessTickSpeed;
+    private float hungrinessCount, cleanlinessCount, happinessCount;
 
     private int hungriness, maxHungriness;
     private int cleanliess, maxCleanliness;
+    private int happiness, maxHappiness;
     private int overEat;
 
     private bool isFinishBathing;
@@ -28,8 +29,10 @@ public class MonsterController : MonoBehaviour
     private Rigidbody rb;
     public int Hungriness { get => hungriness; set => hungriness = value; }
     public int MaxHungriness { get => maxHungriness; set => maxHungriness = value; }
-    public int Cleanliess { get => cleanliess; set => cleanliess = value; }
+    public int Cleanliness { get => cleanliess; set => cleanliess = value; }
     public int MaxCleanliness { get => maxCleanliness; set => maxCleanliness = value; }
+    public int Happiness { get => happiness; set => happiness = value; }
+    public int MaxHappiness { get => maxHappiness; set => maxHappiness = value; }
 
     void Start()
     {
@@ -63,12 +66,12 @@ public class MonsterController : MonoBehaviour
         }
         if (cleanlinessCount >= cleanlinessTickSpeed)
         {
-            if (Cleanliess > 0)
+            if (Cleanliness > 0)
             {
-                Cleanliess--;
-                if (Cleanliess % 5 == 0)
+                Cleanliness--;
+                if (Cleanliness % 5 == 0)
                 {
-                    ArSceneController.Instance.SetCleanliness(Cleanliess, MaxCleanliness);
+                    ArSceneController.Instance.SetCleanliness(Cleanliness, MaxCleanliness);
                 }
                 cleanlinessCount = 0;
             }
@@ -77,8 +80,25 @@ public class MonsterController : MonoBehaviour
                 // very dirty
             }
         }
+        if (happinessCount >= happinessTickSpeed)
+        {
+            if (Happiness > 0)
+            {
+                Happiness--;
+                if(Happiness % 5 == 0)
+                {
+                    ArSceneController.Instance.SetHappiness(Happiness, MaxHappiness);
+                }
+                happinessCount = 0;
+            }
+            else
+            {
+                // very sad
+            }
+        }
         hungrinessCount += Time.deltaTime;
         cleanlinessCount += Time.deltaTime;
+        happinessCount += Time.deltaTime;
         #endregion
         #region Idle
         if (_currentActivity == MonsterActivity.Idle)
@@ -166,6 +186,11 @@ public class MonsterController : MonoBehaviour
         Debug.Log("Move to : " + pos);
         moveTarget = new Vector3(pos.x, gameObject.transform.position.y, pos.z);
     }
+    public void AddHappiness()
+    {
+        Happiness++;
+        ArSceneController.Instance.SetHappiness(Happiness, MaxHappiness);
+    }
     public void SetIsFinishBathing(bool boo)
     {
         isFinishBathing = boo;
@@ -184,11 +209,13 @@ public class MonsterController : MonoBehaviour
     {
         MaxHungriness = 100;
         MaxCleanliness = 100;
+        MaxHappiness = 100;
         Hungriness = MaxHungriness;
-        Cleanliess = MaxCleanliness;
+        Cleanliness = MaxCleanliness;
+        Happiness = MaxHappiness;
         overEat = 0;
         hungrinessTickSpeed = 1;
         cleanlinessTickSpeed = 10f;
-
+        happinessTickSpeed = 1;
     }
 }

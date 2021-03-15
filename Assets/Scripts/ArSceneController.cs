@@ -16,6 +16,10 @@ public enum GamePhase
     FeedingPhase,
     CleaningPhase,
 }
+public enum CleaningPhase
+{
+
+}
 public class ArSceneController : MonoBehaviour
 {
     public static ArSceneController Instance;
@@ -45,7 +49,7 @@ public class ArSceneController : MonoBehaviour
     [SerializeField]
     private Slider sensitiveXY;
     [SerializeField]
-    private Image hungrinessBar, cleanlinessBar;
+    private Image hungrinessBar, cleanlinessBar, happinessBar;
 
     private bool isSummoned;
     private bool isGridRemoved;
@@ -111,6 +115,19 @@ public class ArSceneController : MonoBehaviour
             {
                 ResetVariable();
             }
+            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+                if (Physics.Raycast(ray, out RaycastHit hit, 100))
+                {
+                    if (hit.transform.CompareTag("Monster"))
+                    {
+                        hit.transform.GetComponent<MonsterController>().AddHappiness();
+                        // do something
+                    }
+                    SetNameText(hit.transform.tag);
+                }
+            }
         }
         #endregion
         #region Feeding
@@ -142,7 +159,7 @@ public class ArSceneController : MonoBehaviour
                     if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended)
                     {
                         currentFeedingCube.transform.SetParent(worldObjectHolder.transform);
-                        SetNameText("zDiff : " + (currentMonsterEnvironment.GetMonsterPosition().z - firstPersonCamera.transform.position.z).ToString() + " xDiff : " + (currentMonsterEnvironment.GetMonsterPosition().x - firstPersonCamera.transform.position.x).ToString());
+                        //SetNameText("zDiff : " + (currentMonsterEnvironment.GetMonsterPosition().z - firstPersonCamera.transform.position.z).ToString() + " xDiff : " + (currentMonsterEnvironment.GetMonsterPosition().x - firstPersonCamera.transform.position.x).ToString());
                         ThrowableObject.Instance.StopTouch(Input.GetTouch(0).position, (currentMonsterEnvironment.GetMonsterPosition().z - firstPersonCamera.transform.position.z) * 50f, (currentMonsterEnvironment.GetMonsterPosition().x - firstPersonCamera.transform.position.x) * 25f);
                         // find the better algorithm for realistic aimming. may be just get distance and get the angle?
                         isAllowThrowFood = false;
@@ -366,6 +383,11 @@ public class ArSceneController : MonoBehaviour
         float fillAmount = (float)amount / (float)max;
         cleanlinessBar.fillAmount = fillAmount;
     }
+    public void SetHappiness(int amount, int max)
+    {
+        float fillAmount = (float)amount / (float)max;
+        happinessBar.fillAmount = fillAmount;
+    }
     public FoodScript GetCurrentFood()
     {
         return currentFeedingCube.GetComponent<FoodScript>();
@@ -395,6 +417,15 @@ public class ArSceneController : MonoBehaviour
         if (currentBath != null)
         {
             currentBath.GetComponent<BathScript>().ExitBathTub();
+        }
+    }
+    public void DevRemoveMonster()
+    {
+        if(currentMonsterEnvironment != null)
+        {
+            GameObject tmp = currentMonsterEnvironment.gameObject;
+            currentMonsterEnvironment = null;
+            Destroy(tmp);
         }
     }
 }

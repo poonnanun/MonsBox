@@ -25,6 +25,8 @@ public class MonsterController : MonoBehaviour
     private int overEat;
 
     private bool isFinishBathing;
+    private readonly int rubThreshold = 10;
+    private int rubCount;
 
     private Rigidbody rb;
     public int Hungriness { get => hungriness; set => hungriness = value; }
@@ -39,6 +41,7 @@ public class MonsterController : MonoBehaviour
         _currentActivity = MonsterActivity.Idle;
         moveSpeed = 0.5f;
         turnSpeed = 5f;
+        rubCount = 0;
 
         hungrinessCount = cleanlinessCount = 0;
         rb = GetComponent<Rigidbody>();
@@ -188,8 +191,13 @@ public class MonsterController : MonoBehaviour
     }
     public void AddHappiness()
     {
-        Happiness++;
-        ArSceneController.Instance.SetHappiness(Happiness, MaxHappiness);
+        rubCount++;
+        if(rubCount == rubThreshold)
+        {
+            rubCount = 0;
+            Happiness++;
+            ArSceneController.Instance.SetHappiness(Happiness, MaxHappiness);
+        }
     }
     public void SetIsFinishBathing(bool boo)
     {
@@ -214,8 +222,8 @@ public class MonsterController : MonoBehaviour
         Cleanliness = MaxCleanliness;
         Happiness = MaxHappiness;
         overEat = 0;
-        hungrinessTickSpeed = 1;
+        hungrinessTickSpeed = 1f;
         cleanlinessTickSpeed = 10f;
-        happinessTickSpeed = 1;
+        happinessTickSpeed = 1f;
     }
 }

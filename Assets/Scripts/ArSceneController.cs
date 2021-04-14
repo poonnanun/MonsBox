@@ -15,6 +15,7 @@ public enum GamePhase
     IdlePhase,
     FeedingPhase,
     CleaningPhase,
+    ScanningPhase,
 }
 public enum CleaningPhase
 {
@@ -50,6 +51,8 @@ public class ArSceneController : MonoBehaviour
     private Slider sensitiveXY;
     [SerializeField]
     private Image hungrinessBar, cleanlinessBar, happinessBar;
+    [SerializeField]
+    private GameObject FitToScanOverlay;
 
     private bool isSummoned;
     private bool isGridRemoved;
@@ -63,6 +66,9 @@ public class ArSceneController : MonoBehaviour
     private bool isAllowSpawnBath;
     private bool isBathSpawned;
     private bool isVariableReset;
+
+    private List<AugmentedImage> _tempAugmentedImages = new List<AugmentedImage>();
+    private List<int> scannedImages = new List<int>();
 
     private const float _prefabRotation = 180.0f;
     public void Awake()
@@ -190,6 +196,33 @@ public class ArSceneController : MonoBehaviour
                 currentMons.ChanceActivity(MonsterActivity.FindBath);
                 ChangeGamePhase(GamePhase.IdlePhase);
             }
+        }
+        #endregion
+        #region Scanning
+        else if (_currentGamePhase == GamePhase.ScanningPhase)
+        {
+            Session.GetTrackables<AugmentedImage>(_tempAugmentedImages, TrackableQueryFilter.Updated);
+            if(scannedImages.Count < _tempAugmentedImages.Count)
+            {
+                foreach (var image in _tempAugmentedImages)
+                {
+                    if (scannedImages.Contains(image.DatabaseIndex))
+                    {
+                        continue;
+                    }
+                    if (image.TrackingState == TrackingState.Tracking)
+                    {
+                        // Create an anchor to ensure that ARCore keeps tracking this augmented image.
+                        Anchor anchor = image.CreateAnchor(image.CenterPose);
+                        GameObject visualizer = Instantiate(feedingCube, anchor.transform);
+                        visualizer.transform.localPosition = Vector3.zero;
+                        scannedImages.Add(image.DatabaseIndex);
+                    }
+                }
+            }
+            
+
+            FitToScanOverlay.SetActive(true);
         }
         #endregion
     }
@@ -320,6 +353,10 @@ public class ArSceneController : MonoBehaviour
             planeGenerator.ActiveGridDisplay();
             isGridRemoved = false;
         }
+    }
+    public void EnterScanning()
+    {
+        ChangeGamePhase(GamePhase.ScanningPhase);
     }
     public void SpawnFood()
     {

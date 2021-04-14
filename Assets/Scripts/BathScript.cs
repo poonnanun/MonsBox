@@ -31,6 +31,7 @@ public class BathScript : MonoBehaviour
         currentMonster = mons;
         beforeParent = mons.transform.parent;
         mons.transform.SetParent(transform);
+        mons.GetComponent<MonsterController>().OnArrivedAtBath();
         mons.GetComponent<MonsterController>().SetKinematic(true);
         mons.transform.localPosition = desiredPostion;
         mons.transform.localRotation = desiredRotation;
@@ -46,5 +47,6 @@ public class BathScript : MonoBehaviour
     {
         desiredPostion = new Vector3(0, 0.05f, 0);
         desiredRotation = Quaternion.identity;
+        //TODO set rotaion to face toward camera
     }
 }

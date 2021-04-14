@@ -352,7 +352,7 @@ public class ArSceneController : MonoBehaviour
         GameObject tmp = currentBath;
         currentBath = null;
         Destroy(tmp);
-
+        isBathSpawned = false;
     }
     public void ScanForImage()
     {

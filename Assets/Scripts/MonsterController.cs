@@ -152,13 +152,6 @@ public class MonsterController : MonoBehaviour
             {
                 gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, moveTarget, Time.deltaTime * moveSpeed);
                 gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, Quaternion.LookRotation(moveTarget - gameObject.transform.position), Time.deltaTime * turnSpeed);
-
-                if (Vector3.Distance(gameObject.transform.position, moveTarget) < 0.17f)
-                {
-                    isFinishBathing = false;
-                    ChanceActivity(MonsterActivity.Bathing);
-                    return;
-                }
             }
         }
         #endregion
@@ -171,6 +164,11 @@ public class MonsterController : MonoBehaviour
             }
         }
         #endregion
+    }
+    public void OnArrivedAtBath()
+    {
+        isFinishBathing = false;
+        ChanceActivity(MonsterActivity.Bathing);
     }
     public void ResetVariable()
     {

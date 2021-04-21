@@ -240,6 +240,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4095622432351379172, guid: 5b0772181da81e24b85119d9ce22524b,
+        type: 3}
+      propertyPath: walkSoundThreshold
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8262517918842433170, guid: 5b0772181da81e24b85119d9ce22524b,
         type: 3}
       propertyPath: m_RootOrder

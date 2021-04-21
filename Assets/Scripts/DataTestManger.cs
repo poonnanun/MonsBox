@@ -87,6 +87,6 @@ public class DataTestManger : MonoBehaviour
     }
     public void GetURL()
     {
-        url = "http://192.168.5.150:8090/";
+        url = "https://monsbox-backend-e64sflkoha-as.a.run.app/";
     }
 }

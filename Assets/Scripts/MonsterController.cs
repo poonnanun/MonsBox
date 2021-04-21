@@ -13,11 +13,15 @@ public enum MonsterActivity
 }
 public class MonsterController : MonoBehaviour
 {
+    [SerializeField]
+    private float walkSoundThreshold;
+
     private MonsterActivity _currentActivity;
     private Vector3 moveTarget;
     private float moveSpeed, turnSpeed;
     private float hungrinessTickSpeed, cleanlinessTickSpeed, happinessTickSpeed;
     private float hungrinessCount, cleanlinessCount, happinessCount;
+    private float currentWalkDist;
 
     private int hungriness, maxHungriness;
     private int cleanliess, maxCleanliness;
@@ -122,9 +126,15 @@ public class MonsterController : MonoBehaviour
             //ArSceneController.Instance.SetNameText("FINDFOOD");
             if (moveTarget != null)
             {
+                Vector3 before = gameObject.transform.position;
                 gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, moveTarget, Time.deltaTime * moveSpeed);
+                Vector3 after = gameObject.transform.position;
                 gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, Quaternion.LookRotation(moveTarget - gameObject.transform.position), Time.deltaTime * turnSpeed);
-
+                currentWalkDist += Vector3.Distance(before, after);
+                if(currentWalkDist >= walkSoundThreshold)
+                {
+                    SoundManager.Instance.PlayWalkSound();
+                }
                 if (Vector3.Distance(gameObject.transform.position, moveTarget) < 0.17f)
                 {
                     ChanceActivity(MonsterActivity.Eating);

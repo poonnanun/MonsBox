@@ -66,6 +66,7 @@ public class ArSceneController : MonoBehaviour
     private bool isAllowSpawnBath;
     private bool isBathSpawned;
     private bool isVariableReset;
+    private bool isAllowAugmentedImage;
 
     private List<AugmentedImage> _tempAugmentedImages = new List<AugmentedImage>();
     private List<int> scannedImages = new List<int>();
@@ -85,6 +86,9 @@ public class ArSceneController : MonoBehaviour
         mainPanel.SetActive(false);
         hintPanel.SetActive(true);
         sensitiveXY.gameObject.SetActive(false);
+        SoundInitializer.Instance.Init();
+        SoundManager.Instance.Init();
+        SoundManager.Instance.TurnOnBGM(BGSoundName.ArScene);
     }
     // Update is called once per frame
     void Update()
@@ -356,7 +360,10 @@ public class ArSceneController : MonoBehaviour
     }
     public void EnterScanning()
     {
-        ChangeGamePhase(GamePhase.ScanningPhase);
+        if (isAllowAugmentedImage)
+        {
+            ChangeGamePhase(GamePhase.ScanningPhase);
+        }
     }
     public void SpawnFood()
     {
@@ -383,6 +390,10 @@ public class ArSceneController : MonoBehaviour
         // instantiate on the indicator
         // Make monster able to get on the tub
         // Have raycast or something to rub the monster to increase cleanliness
+    }
+    public void SetAllowAugmentedImage(bool boo)
+    {
+        isAllowAugmentedImage = boo;
     }
     public void DespawnBathTub()
     {

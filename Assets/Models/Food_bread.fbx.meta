@@ -1,14 +1,9 @@
 fileFormatVersion: 2
-guid: b735bfad3635b2d4192f67d3a2870a09
+guid: a9bdcf89bb9f74d8094c71c36847d422
 ModelImporter:
   serializedVersion: 20101
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: BreadBase
-    second: {fileID: 2100000, guid: 0b96aa616a0c3457ab5c3c6944d81139, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 1
     materialName: 0

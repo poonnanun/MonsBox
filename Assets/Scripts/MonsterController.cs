@@ -234,4 +234,8 @@ public class MonsterController : MonoBehaviour
         cleanlinessTickSpeed = 10f;
         happinessTickSpeed = 1f;
     }
+    public void LoadAsset()
+    {
+
+    }
 }

@@ -86,4 +86,20 @@ public class MonsterStausRawData
     }
 }
 
+[System.Serializable]
+public class MonsterAsset
+{
+    public string color;
+    public string material;
+    public string model;
+    public override string ToString()
+    {
+        string output = "";
+        output += "color: " + color + " | ";
+        output += "material: " + material + " | ";
+        output += "model: " + model + " | ";
+        return output;
+    }
+}
+
 #endregion

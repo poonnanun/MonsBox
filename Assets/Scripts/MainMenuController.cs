@@ -17,6 +17,8 @@ public class MainMenuController : MonoBehaviour
     private TextMeshProUGUI userText, passText, monsterNameText;
     [SerializeField]
     private TextMeshProUGUI loginHeader;
+    [SerializeField]
+    private TextMeshProUGUI uidDisplayText;
 
     private readonly int maximumMonster = 12;
     private List<GameObject> monstersGrid;
@@ -130,6 +132,7 @@ public class MainMenuController : MonoBehaviour
     {
         string uid = JsonUtility.FromJson<SignInResponse>(res).id;
         PlayerController.Instance.Uid = uid;
+        ShowCurrentUid();
         GetAllMonsterData();
         CloseLoginPanel();
     }
@@ -148,5 +151,9 @@ public class MainMenuController : MonoBehaviour
     {
         GetAllMonsterData();
         CloseCreateMonPanel();
+    }
+    public void ShowCurrentUid()
+    {
+        uidDisplayText.text = "Uid: " + PlayerController.Instance.Uid;
     }
 }

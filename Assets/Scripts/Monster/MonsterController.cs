@@ -28,7 +28,6 @@ public class MonsterController : MonoBehaviour
     private int hungriness, maxHungriness;
     private int cleanliess, maxCleanliness;
     private int happiness, maxHappiness;
-    private int overEat;
 
     private bool isFinishBathing;
     private readonly int rubThreshold = 10;
@@ -36,6 +35,9 @@ public class MonsterController : MonoBehaviour
 
     private MonsterRawData monsterData;
     private MonsterAsset monsterAsset;
+
+    private readonly float LoadDataInteraval = 60f;
+    private float loadDataCount;
 
     private Rigidbody rb;
     public int Hungriness { get => hungriness; set => hungriness = value; }
@@ -45,6 +47,8 @@ public class MonsterController : MonoBehaviour
     public int Happiness { get => happiness; set => happiness = value; }
     public int MaxHappiness { get => maxHappiness; set => maxHappiness = value; }
     public string Id { get => id; set => id = value; }
+    public string Name { get => monsterData.name; }
+    public MonsterAsset MonsterAsset { get => monsterAsset; set => monsterAsset = value; }
 
     void Start()
     {
@@ -52,12 +56,14 @@ public class MonsterController : MonoBehaviour
         moveSpeed = 0.5f;
         turnSpeed = 5f;
         rubCount = 0;
+        loadDataCount = 0;
 
         rb = GetComponent<Rigidbody>();
         if (!GameConfig.isTest)
         {
             LoadData();
         }
+        //StartCoroutine(DataManager.Instance.Evolve(this));
         ToIdleAnimation();
     }
 
@@ -66,6 +72,12 @@ public class MonsterController : MonoBehaviour
         Debug.Log("Monster State : " + _currentActivity.ToString());
         #region Decrease per tick
         //TODO change to pull data from scoket
+        loadDataCount += Time.deltaTime;
+        if (loadDataCount >= LoadDataInteraval)
+        {
+            loadDataCount = 0;
+            RefreshData();
+        }
         #endregion
         #region Idle
         if (_currentActivity == MonsterActivity.Idle)
@@ -165,6 +177,10 @@ public class MonsterController : MonoBehaviour
         }
         #endregion
     }
+    public void RefreshData()
+    {
+        StartCoroutine(DataManager.Instance.GetMonsterDataFromId(monsterData.id, this));
+    }
     public void StartWander()
     {
         ChanceActivity(MonsterActivity.Wander);
@@ -211,27 +227,28 @@ public class MonsterController : MonoBehaviour
     }
     public void OnEat(int amount)
     {
-        Hungriness += amount;
-        if(Hungriness > MaxHungriness)
-        {
-            overEat += Hungriness - MaxHungriness;
-            Hungriness = MaxHungriness;
-        }
-        ArSceneController.Instance.SetHungriness(Hungriness, MaxHungriness);
+        //StartCoroutine(DataManager.Instance.FinishEating(amount, this));
     }
     public void LoadData()
     {
         monsterData = DataManager.Instance.GetMonsterById(PlayerController.Instance.CurrentMonsterId);
-        MaxHungriness = 100;
-        MaxCleanliness = 100;
-        MaxHappiness = 100;
-        Hungriness = monsterData.status.hungry;
-        Cleanliness = monsterData.status.cleanliness;
-        Happiness = monsterData.status.happiness;
-        overEat = 0;
+        MaxHungriness = monsterData.status.hungry.maxValue;
+        MaxCleanliness = monsterData.status.cleanliness.maxValue;
+        MaxHappiness = monsterData.status.happiness.maxValue;
+        Hungriness = monsterData.status.hungry.value;
+        Cleanliness = monsterData.status.cleanliness.value;
+        Happiness = monsterData.status.happiness.value;
 
-        monsterAsset = DataManager.Instance.StringToMonsteAsset(monsterData.asset);
+        SetStatusValue();
+
+        MonsterAsset = DataManager.Instance.StringToMonsteAsset(monsterData.asset);
         LoadAsset();
+    }
+    public void SetStatusValue()
+    {
+        ArSceneController.Instance.SetHappiness(happiness, maxHappiness);
+        ArSceneController.Instance.SetHungriness(Hungriness, MaxHungriness);
+        ArSceneController.Instance.SetCleanliness(Cleanliness, MaxCleanliness);
     }
     public void LoadAsset()
     {

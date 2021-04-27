@@ -47,7 +47,7 @@ public class ArSceneController : MonoBehaviour
     [SerializeField]
     private GameObject bathTub;
     [SerializeField]
-    private TextMeshProUGUI monsterName;
+    private TextMeshProUGUI monsterName, playerCurrency;
     [SerializeField]
     private Image hungrinessBar, cleanlinessBar, happinessBar;
     [SerializeField]
@@ -93,7 +93,7 @@ public class ArSceneController : MonoBehaviour
         SoundInitializer.Instance.Init();
         SoundManager.Instance.Init();
         SoundManager.Instance.TurnOnBGM(BGSoundName.ArScene);
-
+        SetPlayerCurrency(PlayerController.Instance.CurrentGold);
         LoadMonsterData();
     }
     // Update is called once per frame
@@ -357,6 +357,10 @@ public class ArSceneController : MonoBehaviour
             isVariableReset = false;
         }
         _currentGamePhase = gamePhase;
+    }
+    public void SetPlayerCurrency(int amount)
+    {
+        playerCurrency.text = amount.ToString();
     }
     public void SetCurrentMonster(MonsterController mon)
     {

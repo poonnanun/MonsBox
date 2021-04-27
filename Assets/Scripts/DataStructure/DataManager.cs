@@ -40,6 +40,10 @@ public class DataManager : MonoBehaviour
     {
         StartCoroutine(GetItemData());
     }
+    private void GetUrl()
+    {
+        url = "https://monsbox-backend-e64sflkoha-as.a.run.app/";
+    }
     private MonsterPool monsterPool;
     public IEnumerator GetMonsterData(string uid, MainMenuController con)
     {
@@ -64,6 +68,28 @@ public class DataManager : MonoBehaviour
             }
         }
     }
+    public IEnumerator GetMonsterDataFromId(string id, MonsterController con)
+    {
+        string path = "monster";
+        if (id.Length > 0)
+        {
+            path += "/" + id;
+        }
+        using (UnityWebRequest req = UnityWebRequest.Get(url + path))
+        {
+            yield return req.SendWebRequest();
+
+            if (req.isNetworkError || req.isHttpError)
+            {
+                Debug.LogError(req.error + " ( " + (url + path) + " )");
+            }
+            else
+            {
+                monsterPool = JsonUtility.FromJson<MonsterPool>(req.downloadHandler.text);
+                con.LoadData();
+            }
+        }
+    }
     private ItemPool itemPool;
     public IEnumerator GetItemData()
     {
@@ -82,6 +108,29 @@ public class DataManager : MonoBehaviour
             }
         }
     }
+    private WalletPool walletPool;
+    public IEnumerator GetWalletData(string uid)
+    {
+        string path = "wallet";
+        if (uid.Length > 0)
+        {
+            path += "?userId=" + uid;
+        }
+        using (UnityWebRequest req = UnityWebRequest.Get(url + path))
+        {
+            yield return req.SendWebRequest();
+
+            if (req.isNetworkError || req.isHttpError)
+            {
+                Debug.LogError(req.error + " ( " + (url + path) + " )");
+            }
+            else
+            {
+                walletPool = JsonUtility.FromJson<WalletPool>(req.downloadHandler.text);
+                PlayerController.Instance.CurrentWallet = walletPool.GetFirstWallet();
+            }
+        }
+    }
     public ItemPool GetItemPool()
     {
         return itemPool;
@@ -90,9 +139,13 @@ public class DataManager : MonoBehaviour
     {
         return itemPool.GetItemById(id);
     }
-    private void GetUrl()
+    public WalletPool GetWalletPool()
     {
-        url = "https://monsbox-backend-e64sflkoha-as.a.run.app/";
+        return walletPool;
+    }
+    public WalletRawData GetFirstWallet()
+    {
+        return walletPool.GetFirstWallet();
     }
     public MonsterPool GetMonsterPool()
     {
@@ -109,6 +162,24 @@ public class DataManager : MonoBehaviour
     public MonsterAsset StringToMonsteAsset(string str)
     {
         return JsonUtility.FromJson<MonsterAsset>(str);
+    }
+    public IEnumerator UpdateWallet(string id, int amount)
+    {
+        string path = "monster";
+        WWWForm form = new WWWForm();
+        using (UnityWebRequest req = UnityWebRequest.Post(url + path, form))
+        {
+            yield return req.SendWebRequest();
+
+            if (req.isNetworkError || req.isHttpError)
+            {
+                Debug.LogError(req.error + " ( " + (url + path) + " )");
+            }
+            else
+            {
+                Debug.Log("finish : " + req.downloadHandler.text);
+            }
+        }
     }
     public IEnumerator CreateMonster(CreatingMonster sendData, MainMenuController con)
     {
@@ -132,23 +203,55 @@ public class DataManager : MonoBehaviour
             }
         }
     }
-    public IEnumerator FinishEating(int amount)
+    public IEnumerator FinishEating(int amount, MonsterController con)
     {
-        string path = "/monster";
+        string path = "monster/";
 
         MonsterCare sendData = new MonsterCare(new MonsterCareActivities("hungry", amount), amount);
-        string body = JsonUtility.ToJson(sendData);
-        using (UnityWebRequest req = UnityWebRequest.Put(url + PlayerController.Instance.CurrentMonsterId + path, body))
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(JsonUtility.ToJson(sendData));
+        WWWForm form = new WWWForm();
+        form.AddField("activities", JsonUtility.ToJson(new MonsterCareActivities("hungry",amount)));
+        form.AddField("experience", amount);
+        Debug.Log(form);
+        string finalPath = url + path + PlayerController.Instance.CurrentMonsterId + "/care";
+        using (UnityWebRequest req = UnityWebRequest.Put(finalPath, JsonUtility.ToJson(sendData)))
         {
+            req.SetRequestHeader("Content-Type", "application/json");
             yield return req.SendWebRequest();
 
             if (req.isNetworkError || req.isHttpError)
             {
-                Debug.LogError(req.error + " ( " + (url + path) + " )");
+                Debug.LogError(req.error + " ( " + finalPath + " )");
             }
             else
             {
                 Debug.Log("Complete");
+                con.RefreshData();
+            }
+        }
+    }
+    public IEnumerator Evolve(MonsterController con)
+    {
+        string path = "monster/";
+
+        WWWForm form = new WWWForm();
+        form.AddField("userId", PlayerController.Instance.Uid);
+        form.AddField("name", con.Name);
+        form.AddField("asset", MonsterAssetToString(con.MonsterAsset));
+        string finalPath = url + path + PlayerController.Instance.CurrentMonsterId + "/evolve";
+        using (UnityWebRequest req = UnityWebRequest.Post(finalPath, form))
+        {
+            req.method = "PUT";
+            yield return req.SendWebRequest();
+
+            if (req.isNetworkError || req.isHttpError)
+            {
+                Debug.LogError(req.error + " ( " + finalPath + " )");
+            }
+            else
+            {
+                Debug.Log("Complete");
+                con.RefreshData();
             }
         }
     }

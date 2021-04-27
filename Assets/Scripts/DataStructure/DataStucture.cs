@@ -51,7 +51,10 @@ public class MonsterRawData
     public string name;
     public string asset;
     public MonsterStausRawData status;
-    public string tier;
+    public string mType;
+    public string level;
+    public string isAlive;
+    public MonsterEvolve evolve;
 
     public override string ToString()
     {
@@ -60,7 +63,6 @@ public class MonsterRawData
         output += "userId: " + userId + " | ";
         output += "name: " + name + " | ";
         output += "asset: " + asset + " | ";
-        output += "tier: " + tier + " | ";
         output += "Status{ " + status + " } ";
         return output;
     }
@@ -68,22 +70,29 @@ public class MonsterRawData
 [System.Serializable]
 public class MonsterStausRawData
 {
-    public int hungry;
-    public int cleanliness;
-    public int happiness;
-    public int weight;
-    public int lastActivityTimestamp;
+    public MonsterStausValue hungry;
+    public MonsterStausValue cleanliness;
+    public MonsterStausValue healthy;
+    public MonsterStausValue experience;
+    public MonsterStausValue happiness;
 
     public override string ToString()
     {
         string output = "";
-        output += "Hungry: " + hungry + " | ";
-        output += "cleanliness: " + cleanliness + " | ";
-        output += "happiness: " + happiness + " | ";
-        output += "weight: " + weight + " | ";
-        output += "lastActivityTimestamp: " + lastActivityTimestamp + " | ";
+        output += "Hungry: " + hungry.value + " | ";
+        output += "cleanliness: " + cleanliness.value + " | ";
+        output += "happiness: " + happiness.value + " | ";
+        output += "experience: " + experience.value + " | ";
+        output += "healthy: " + healthy.value + " | ";
         return output;
     }
+}
+[System.Serializable]
+public class MonsterStausValue
+{
+    public int value;
+    public int maxValue;
+    public int timestamp;
 }
 
 [System.Serializable]
@@ -106,9 +115,64 @@ public class MonsterAsset
         return output;
     }
 }
+[System.Serializable]
+public class MonsterEvolve
+{
+    public bool canEvolve;
+    public string nextType;
+    public string nextLevel;
+}
 
 #endregion
+#region wallet
+[System.Serializable]
+public class WalletPool
+{
+    public int size;
+    public List<WalletRawData> data;
+    public WalletRawData GetWalletById(string id)
+    {
+        WalletRawData a = data.Where(b => b.id == id).FirstOrDefault();
+        return a;
+    }
+    public WalletRawData GetFirstWallet()
+    {
+        return data[0];
+    }
+    public override string ToString()
+    {
+        string output = "";
+        output += "------------------------\n";
+        foreach (WalletRawData a in data)
+        {
+            output += a.ToString() + "\n";
+        }
+        return output;
+    }
+}
 
+[System.Serializable]
+public class WalletRawData
+{
+    public string id;
+    public string userId;
+    public List<CurrenciesRawData> currencies;
+
+    public override string ToString()
+    {
+        string output = "";
+        output += id + " / " + currencies[0].value;
+        return output;
+    }
+}
+[System.Serializable]
+public class CurrenciesRawData
+{
+    public string cType;
+    public int value;
+}
+
+#endregion
 #region item
 [System.Serializable]
 public class ItemPool
@@ -149,10 +213,10 @@ public class ItemRawData
     public string asset;
     public string iType;
     public int quantity;
-    public PriceRawData price;
+    public List<PriceRawData> price;
     public string status;
     public string owner;
-    public EffectRawData effect;
+    public List<EffectRawData> effect;
 
     public override string ToString()
     {

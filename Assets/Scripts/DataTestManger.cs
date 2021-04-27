@@ -17,44 +17,21 @@ public class DataTestManger : MonoBehaviour
     [SerializeField] private Sprite babyImage;
 
     private string url;
+    private string currMonId = "6087c5b933fe6900252170bf";
 
     // Start is called before the first frame update
     void Start()
     {
-        GetURL();
-        StartCoroutine(GetData());
+
     }
 
-    private IEnumerator GetData()
-    {
-        string path = "monster";
-        Debug.Log("Start");
-        using (UnityWebRequest req = UnityWebRequest.Get(url+path))
-        {
-            yield return req.SendWebRequest();
-
-            if(req.isNetworkError || req.isHttpError)
-            {
-                Debug.Log(req.error + " ( " + (url+path) + " )");
-            }
-            else
-            {
-                Debug.Log(req.downloadHandler.text);
-                Debug.Log("Success");
-                MonsterPool tmp = JsonUtility.FromJson<MonsterPool>(req.downloadHandler.text);
-                Debug.Log(tmp.GetMonsterByNumber(0).ToString());
-                SetAllData(tmp.GetMonsterByNumber(1));
-            }
-        }
-    }
     public void SetAllData(MonsterRawData data)
     {
         //SetName(data.name);
         SetName(data.name);
-        SetHungriness(data.status.hungry);
-        SetCleanliness(data.status.cleanliness);
-        SetHappiness(data.status.happiness);
-        SetImage(data.tier);
+        SetHungriness(data.status.hungry.value);
+        SetCleanliness(data.status.cleanliness.value);
+        SetHappiness(data.status.happiness.value);
     }
     // Update is called once per frame
     void Update()

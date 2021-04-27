@@ -52,7 +52,11 @@ public class MonsterController : MonoBehaviour
         rubCount = 0;
 
         rb = GetComponent<Rigidbody>();
-        LoadData();
+        if (!GameConfig.isTest)
+        {
+            LoadData();
+        }
+        
     }
 
     void Update()
@@ -102,9 +106,12 @@ public class MonsterController : MonoBehaviour
         {
             // play animation here
             //ArSceneController.Instance.SetNameText("EATING");
-            FoodScript food = ArSceneController.Instance.GetCurrentFood();
-            OnEat(food.FullnessAmount);
-            ArSceneController.Instance.DestroyCurrentFood();
+            if (!GameConfig.isTest)
+            {
+                FoodScript food = ArSceneController.Instance.GetCurrentFood();
+                OnEat(food.FullnessAmount);
+                ArSceneController.Instance.DestroyCurrentFood();
+            }
             ChanceActivity(MonsterActivity.Idle);
             return;
         }

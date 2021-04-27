@@ -6,22 +6,22 @@ AnimatorOverrideController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mellow-Controller
+  m_Name: Pengy-Controller
   m_Controller: {fileID: 9100000, guid: 7ec1dfcf4eeb050428547c79edabfe7b, type: 2}
   m_Clips:
   - m_OriginalClip: {fileID: 3429644653669202616, guid: bf1e3fd63d8ed304b84487335d21a79d,
       type: 3}
-    m_OverrideClip: {fileID: 4846799334863772491, guid: 390aa480f4f11f8459d61326b2c9d176,
+    m_OverrideClip: {fileID: 7540182938599042375, guid: 4440a9d8827890e47a754293bc0a5b49,
       type: 3}
   - m_OriginalClip: {fileID: -8645678634007323666, guid: bf1e3fd63d8ed304b84487335d21a79d,
       type: 3}
-    m_OverrideClip: {fileID: -744554452582965459, guid: 390aa480f4f11f8459d61326b2c9d176,
+    m_OverrideClip: {fileID: -8885528339509854547, guid: 4440a9d8827890e47a754293bc0a5b49,
       type: 3}
   - m_OriginalClip: {fileID: -8146984859681458664, guid: bf1e3fd63d8ed304b84487335d21a79d,
       type: 3}
-    m_OverrideClip: {fileID: 4003301056527473515, guid: 390aa480f4f11f8459d61326b2c9d176,
+    m_OverrideClip: {fileID: -8020263697737443206, guid: 4440a9d8827890e47a754293bc0a5b49,
       type: 3}
   - m_OriginalClip: {fileID: -1996286232731382599, guid: bf1e3fd63d8ed304b84487335d21a79d,
       type: 3}
-    m_OverrideClip: {fileID: -5134652760400236727, guid: 390aa480f4f11f8459d61326b2c9d176,
+    m_OverrideClip: {fileID: -2281880293599725356, guid: 4440a9d8827890e47a754293bc0a5b49,
       type: 3}

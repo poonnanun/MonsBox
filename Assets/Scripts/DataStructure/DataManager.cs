@@ -36,8 +36,12 @@ public class DataManager : MonoBehaviour
         GetUrl();
         DontDestroyOnLoad(this.gameObject);
     }
+    private void Start()
+    {
+        StartCoroutine(GetItemData());
+    }
     private MonsterPool monsterPool;
-    public IEnumerator GetData(string uid, MainMenuController con)
+    public IEnumerator GetMonsterData(string uid, MainMenuController con)
     {
         string path = "monster";
         if(uid.Length > 0)
@@ -59,6 +63,32 @@ public class DataManager : MonoBehaviour
                 con.LoadAllMonster();
             }
         }
+    }
+    private ItemPool itemPool;
+    public IEnumerator GetItemData()
+    {
+        string path = "item";
+        using (UnityWebRequest req = UnityWebRequest.Get(url + path))
+        {
+            yield return req.SendWebRequest();
+
+            if (req.isNetworkError || req.isHttpError)
+            {
+                Debug.LogError(req.error + " ( " + (url + path) + " )");
+            }
+            else
+            {
+                itemPool = JsonUtility.FromJson<ItemPool>(req.downloadHandler.text);
+            }
+        }
+    }
+    public ItemPool GetItemPool()
+    {
+        return itemPool;
+    }
+    public ItemRawData GetItemById(string id)
+    {
+        return itemPool.GetItemById(id);
     }
     private void GetUrl()
     {
@@ -124,7 +154,6 @@ public class DataManager : MonoBehaviour
     }
     public IEnumerator SignIn(string type, SignInForm sendData, MainMenuController con)
     {
-        Debug.Log("Start");
         string path = "user";
         WWWForm form = new WWWForm();
         form.AddField("username", sendData.username);

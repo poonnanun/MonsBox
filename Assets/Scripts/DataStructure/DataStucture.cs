@@ -109,6 +109,72 @@ public class MonsterAsset
 
 #endregion
 
+#region item
+[System.Serializable]
+public class ItemPool
+{
+    public int size;
+    public List<ItemRawData> data;
+    public ItemRawData GetItemById(string id)
+    {
+        ItemRawData a = data.Where(b => b.id == id).FirstOrDefault();
+        return a;
+    }
+    public ItemRawData GetItemByNumber(int number)
+    {
+        ItemRawData tmp = null;
+        if (number < data.Count())
+        {
+            tmp = data[number];
+        }
+        return tmp;
+    }
+    public override string ToString()
+    {
+        string output = "";
+        output += "------------------------\n";
+        foreach (ItemRawData a in data)
+        {
+            output += a.ToString() + "\n";
+        }
+        return output;
+    }
+}
+
+[System.Serializable]
+public class ItemRawData
+{
+    public string id;
+    public string name;
+    public string asset;
+    public string iType;
+    public int quantity;
+    public PriceRawData price;
+    public string status;
+    public string owner;
+    public EffectRawData effect;
+
+    public override string ToString()
+    {
+        string output = "";
+        output += id + " / " + name;
+        return output;
+    }
+}
+[System.Serializable]
+public class PriceRawData
+{
+    public string cType;
+    public int value;
+}
+[System.Serializable]
+public class EffectRawData
+{
+    public string status;
+    public int effect;
+}
+#endregion
+
 #region Data sending
 [System.Serializable]
 public class MonsterCare

@@ -24,12 +24,33 @@ public class PlayerController : MonoBehaviour
 
     private int currentGold;
     private int monsterAmount;
+    private WalletRawData currentWallet;
 
     public string CurrentMonsterId { get => currentMonsterId; set => currentMonsterId = value; }
     public string Uid { get => uid; set => uid = value; }
-    public int CurrentGold { get => currentGold; set => currentGold = value; }
+    public int CurrentGold
+    {
+        get => currentGold; set
+        {
+            currentGold = value;
+            if(ArSceneController.Instance!=null)
+                ArSceneController.Instance.SetPlayerCurrency(currentGold);
+        }
+    }
     public int MonsterAmount { get => monsterAmount; set => monsterAmount = value; }
-
+    public WalletRawData CurrentWallet
+    {
+        get => currentWallet; 
+        set
+        {
+            currentWallet = value;
+            currentGold = currentWallet.currencies[0].value;
+        }
+    }
+    public void OnUseMoney(int amount)
+    {
+        CurrentGold -= amount;
+    }
     private void Awake()
     {
         if (_instance != null && _instance != this)

@@ -261,6 +261,7 @@ MonoBehaviour:
     type: 3}
   bathTub: {fileID: 4185168531888777368, guid: 69aedbf4a73ee1f4f90ab057714cb872, type: 3}
   monsterName: {fileID: 719610815}
+  playerCurrency: {fileID: 5009620434242255571}
   hungrinessBar: {fileID: 636494627}
   cleanlinessBar: {fileID: 1071423062}
   happinessBar: {fileID: 1412142084}
@@ -1430,3 +1431,15 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 5009620434242255567}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5009620434242255571 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8456922428268632799, guid: 7576d427a7e03c04c99506e446bab42d,
+    type: 3}
+  m_PrefabInstance: {fileID: 5009620434242255567}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

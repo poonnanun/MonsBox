@@ -48,11 +48,9 @@ public class ArSceneController : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI monsterName;
     [SerializeField]
-    private Slider sensitiveXY;
-    [SerializeField]
     private Image hungrinessBar, cleanlinessBar, happinessBar;
     [SerializeField]
-    private GameObject FitToScanOverlay;
+    private ItemSelectionController itemSelector;
 
     private bool isSummoned;
     private bool isGridRemoved;
@@ -86,7 +84,6 @@ public class ArSceneController : MonoBehaviour
         isGridRemoved = false;
         mainPanel.SetActive(false);
         hintPanel.SetActive(true);
-        sensitiveXY.gameObject.SetActive(false);
         SoundInitializer.Instance.Init();
         SoundManager.Instance.Init();
         SoundManager.Instance.TurnOnBGM(BGSoundName.ArScene);
@@ -150,7 +147,7 @@ public class ArSceneController : MonoBehaviour
         {
             if (currentFeedingCube == null)
             {
-                SpawnFood();
+                SpawnFood(currentFeedingCube);
             }
             else
             {
@@ -227,9 +224,6 @@ public class ArSceneController : MonoBehaviour
                     }
                 }
             }
-            
-
-            FitToScanOverlay.SetActive(true);
         }
         #endregion
     }
@@ -358,9 +352,14 @@ public class ArSceneController : MonoBehaviour
     }
     public void EnterFeeding()
     {
+        itemSelector.OpenSelection();
+        
+    }
+    public void StartThrowFood(GameObject food)
+    {
         isAllowThrowFood = false;
         ChangeGamePhase(GamePhase.FeedingPhase);
-        SpawnFood();
+        SpawnFood(food);
         Invoke("SetIsAllowThrowFood", 0.2f);
     }
     public void EnterCleaning()
@@ -379,31 +378,20 @@ public class ArSceneController : MonoBehaviour
             ChangeGamePhase(GamePhase.ScanningPhase);
         }
     }
-    public void SpawnFood()
+    public void SpawnFood(GameObject food)
     {
         isFoodThrown = false;
-        if (currentFeedingCube == null)
-        {
-            currentFeedingCube = Instantiate(feedingCube, cameraObjectHoler.transform);
-        }
+        currentFeedingCube = Instantiate(feedingCube, cameraObjectHoler.transform);
+        Instantiate(food, currentFeedingCube.transform);
         currentFeedingCube.transform.SetParent(cameraObjectHoler.transform);
         currentFeedingCube.transform.localPosition = new Vector3(0, -0.05f, 0.2f);
         currentFeedingCube.transform.localRotation = Quaternion.identity;
         currentFeedingCube.GetComponent<ThrowableObject>().SetLocation();
-        sensitiveXY.gameObject.SetActive(true);
-        sensitiveXY.value = currentFeedingCube.GetComponent<ThrowableObject>().Sensitivity;
     }
     public void ResetVariable()
     {
         isBathSpawned = false;
         isFoodThrown = false;
-    }
-    public void SpawnTub()
-    {
-        // Open indicator on the plane or grid
-        // instantiate on the indicator
-        // Make monster able to get on the tub
-        // Have raycast or something to rub the monster to increase cleanliness
     }
     public void SetAllowAugmentedImage(bool boo)
     {
@@ -416,10 +404,6 @@ public class ArSceneController : MonoBehaviour
         Destroy(tmp);
         isBathSpawned = false;
     }
-    public void ScanForImage()
-    {
-        // don't know how just google augmented image arcore
-    }
     public void SetIsAllowThrowFood()
     {
         isAllowThrowFood = true;
@@ -427,13 +411,6 @@ public class ArSceneController : MonoBehaviour
     public Vector3 GetCurrentCameraPostion()
     {
         return firstPersonCamera.transform.position;
-    }
-    public void SetSensitivity()
-    {
-        if(currentFeedingCube != null)
-        {
-            currentFeedingCube.GetComponent<ThrowableObject>().Sensitivity = sensitiveXY.value;
-        }
     }
     public void SetHungriness(int amount, int max)
     {
@@ -452,7 +429,7 @@ public class ArSceneController : MonoBehaviour
     }
     public FoodScript GetCurrentFood()
     {
-        return currentFeedingCube.GetComponent<FoodScript>();
+        return itemSelector.GetFoodFromModelId(currentFeedingCube.transform.GetChild(0).GetComponent<ItemModel>().AssetId);
     }
     public void DestroyCurrentFood()
     {

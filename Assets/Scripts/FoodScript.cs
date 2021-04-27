@@ -2,22 +2,39 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FoodScript : MonoBehaviour
+[CreateAssetMenu(fileName = "Data", menuName = "Scriptable/Food", order = 1)]
+public class FoodScript : ScriptableObject
 {
-    private int fullnessAmount;
+    [SerializeField]
+    private string itemId;
+    [SerializeField]
+    private Sprite image;
+    [SerializeField]
+    private int effect;
+    [SerializeField]
     private int price;
-    public int FullnessAmount { get => fullnessAmount; set => fullnessAmount = value; }
-    public int Price { get => price; set => price = value; }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        LoadData();
-    }
+  
+    private string itemName;
+    private int itemQuantity;
+    private int itemPrice;
+    private string assetId;
+    private string status;
+    public string ItemName { get => itemName; set => itemName = value; }
+    public int ItemQuantity { get => itemQuantity; set => itemQuantity = value; }
+    public int ItemPrice { get => itemPrice; set => itemPrice = value; }
+    public string AssetId { get => assetId; set => assetId = value; }
+    public string Status { get => status; set => status = value; }
+    public int Effect { get => effect; set => effect = value; }
+    public string ItemId { get => itemId; set => itemId = value; }
+    public Sprite Image { get => image; set => image = value; }
 
     public void LoadData()
     {
-        FullnessAmount = 10;
-        Price = 10;
+        ItemRawData data = DataManager.Instance.GetItemById(ItemId);
+        ItemName = data.name;
+        ItemQuantity = data.quantity;
+        ItemPrice = price;
+        AssetId = data.asset;
+        Status = data.status;
     }
 }

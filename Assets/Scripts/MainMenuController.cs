@@ -35,7 +35,7 @@ public class MainMenuController : MonoBehaviour
     }
     public void GetAllMonsterData()
     {
-        StartCoroutine(DataManager.Instance.GetData(PlayerController.Instance.Uid, this));
+        StartCoroutine(DataManager.Instance.GetMonsterData(PlayerController.Instance.Uid, this));
     }
     public void LoadAllMonster()
     {

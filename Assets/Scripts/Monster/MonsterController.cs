@@ -114,7 +114,8 @@ public class MonsterController : MonoBehaviour
             if (!GameConfig.isTest)
             {
                 FoodScript food = ArSceneController.Instance.GetCurrentFood();
-                OnEat(food.FullnessAmount);
+                //OnEat(food.Effect);
+                OnEat(10);
                 ArSceneController.Instance.DestroyCurrentFood();
             }
             Invoke("ToIdleAnimation", 1.5f);

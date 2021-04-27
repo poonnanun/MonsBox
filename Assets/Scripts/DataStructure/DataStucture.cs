@@ -86,4 +86,92 @@ public class MonsterStausRawData
     }
 }
 
+[System.Serializable]
+public class MonsterAsset
+{
+    public string material;
+    public string model;
+
+    public MonsterAsset(string material, string model)
+    {
+        this.material = material;
+        this.model = model;
+    }
+
+    public override string ToString()
+    {
+        string output = "";
+        output += "material: " + material + " | ";
+        output += "model: " + model + " | ";
+        return output;
+    }
+}
+
+#endregion
+
+#region Data sending
+[System.Serializable]
+public class MonsterCare
+{
+    public MonsterCareActivities activities;
+    public int experience;
+
+    public MonsterCare(MonsterCareActivities act, int experience)
+    {
+        this.activities = act;
+        this.experience = experience;
+    }
+}
+[System.Serializable]
+public class MonsterCareActivities
+{
+    public string status;
+    public int effect;
+    
+    public MonsterCareActivities(string status, int effect)
+    {
+        this.status = status;
+        this.effect = effect;
+    }
+}
+[System.Serializable]
+public class CreatingMonster
+{
+    public string userId;
+    public string name;
+    public string asset;
+
+    public CreatingMonster(string userId, string name, string asset)
+    {
+        this.userId = userId;
+        this.name = name;
+        this.asset = asset;
+    }
+}
+[System.Serializable]
+public class SignInForm
+{
+    public string username;
+    public string password;
+
+    public SignInForm(string username, string password)
+    {
+        this.username = username;
+        this.password = password;
+    }
+}
+[System.Serializable]
+public class SignInResponse
+{
+    public string id;
+    public string username;
+    public string token;
+
+    public SignInResponse(string id, string username, string token)
+    {
+        this.id = id;
+        this.username = username;
+        this.token = token;
+    }
+}
 #endregion

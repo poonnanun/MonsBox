@@ -126,8 +126,15 @@ namespace GoogleARCoreInternal
 
             if (config.AugmentedImageDatabase != null)
             {
-                LogLimitedSupportMessage("enable 'Augmented Images'", true);
-                isValid = false;
+                if(ArSceneController.Instance != null)
+                {
+                    ArSceneController.Instance.SetAllowAugmentedImage(false);
+                }
+                else
+                {
+                    LogLimitedSupportMessage("enable 'Augmented Images'", true);
+                    isValid = false;
+                }
             }
 
             if (config.AugmentedFaceMode == AugmentedFaceMode.Mesh)

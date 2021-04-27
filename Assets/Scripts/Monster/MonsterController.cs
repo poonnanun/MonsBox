@@ -13,11 +13,15 @@ public enum MonsterActivity
 }
 public class MonsterController : MonoBehaviour
 {
+    [SerializeField]
+    private float walkSoundThreshold;
+    [SerializeField]
+    private string id;
+
     private MonsterActivity _currentActivity;
     private Vector3 moveTarget;
     private float moveSpeed, turnSpeed;
-    private float hungrinessTickSpeed, cleanlinessTickSpeed, happinessTickSpeed;
-    private float hungrinessCount, cleanlinessCount, happinessCount;
+    private float currentWalkDist;
 
     private int hungriness, maxHungriness;
     private int cleanliess, maxCleanliness;
@@ -28,6 +32,9 @@ public class MonsterController : MonoBehaviour
     private readonly int rubThreshold = 10;
     private int rubCount;
 
+    private MonsterRawData monsterData;
+    private MonsterAsset monsterAsset;
+
     private Rigidbody rb;
     public int Hungriness { get => hungriness; set => hungriness = value; }
     public int MaxHungriness { get => maxHungriness; set => maxHungriness = value; }
@@ -35,6 +42,7 @@ public class MonsterController : MonoBehaviour
     public int MaxCleanliness { get => maxCleanliness; set => maxCleanliness = value; }
     public int Happiness { get => happiness; set => happiness = value; }
     public int MaxHappiness { get => maxHappiness; set => maxHappiness = value; }
+    public string Id { get => id; set => id = value; }
 
     void Start()
     {
@@ -43,65 +51,15 @@ public class MonsterController : MonoBehaviour
         turnSpeed = 5f;
         rubCount = 0;
 
-        hungrinessCount = cleanlinessCount = 0;
         rb = GetComponent<Rigidbody>();
         LoadData();
     }
 
     void Update()
     {
+        Debug.Log("Monster State : " + _currentActivity.ToString());
         #region Decrease per tick
-        if (hungrinessCount >= hungrinessTickSpeed)
-        {
-            if(Hungriness > 0)
-            {
-                Hungriness--;
-                if (Hungriness % 5 == 0)
-                {
-                    ArSceneController.Instance.SetHungriness(Hungriness, MaxHungriness);
-                }
-                hungrinessCount = 0;
-            }
-            else
-            {
-                // very hungry
-            }
-        }
-        if (cleanlinessCount >= cleanlinessTickSpeed)
-        {
-            if (Cleanliness > 0)
-            {
-                Cleanliness--;
-                if (Cleanliness % 5 == 0)
-                {
-                    ArSceneController.Instance.SetCleanliness(Cleanliness, MaxCleanliness);
-                }
-                cleanlinessCount = 0;
-            }
-            else
-            {
-                // very dirty
-            }
-        }
-        if (happinessCount >= happinessTickSpeed)
-        {
-            if (Happiness > 0)
-            {
-                Happiness--;
-                if(Happiness % 5 == 0)
-                {
-                    ArSceneController.Instance.SetHappiness(Happiness, MaxHappiness);
-                }
-                happinessCount = 0;
-            }
-            else
-            {
-                // very sad
-            }
-        }
-        hungrinessCount += Time.deltaTime;
-        cleanlinessCount += Time.deltaTime;
-        happinessCount += Time.deltaTime;
+        //TODO change to pull data from scoket
         #endregion
         #region Idle
         if (_currentActivity == MonsterActivity.Idle)
@@ -122,9 +80,15 @@ public class MonsterController : MonoBehaviour
             //ArSceneController.Instance.SetNameText("FINDFOOD");
             if (moveTarget != null)
             {
+                Vector3 before = gameObject.transform.position;
                 gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, moveTarget, Time.deltaTime * moveSpeed);
+                Vector3 after = gameObject.transform.position;
                 gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, Quaternion.LookRotation(moveTarget - gameObject.transform.position), Time.deltaTime * turnSpeed);
-
+                currentWalkDist += Vector3.Distance(before, after);
+                if(currentWalkDist >= walkSoundThreshold)
+                {
+                    SoundManager.Instance.PlayWalkSound();
+                }
                 if (Vector3.Distance(gameObject.transform.position, moveTarget) < 0.17f)
                 {
                     ChanceActivity(MonsterActivity.Eating);
@@ -213,15 +177,20 @@ public class MonsterController : MonoBehaviour
     }
     public void LoadData()
     {
+        monsterData = DataManager.Instance.GetMonsterById(PlayerController.Instance.CurrentMonsterId);
         MaxHungriness = 100;
         MaxCleanliness = 100;
         MaxHappiness = 100;
-        Hungriness = MaxHungriness;
-        Cleanliness = MaxCleanliness;
-        Happiness = MaxHappiness;
+        Hungriness = monsterData.status.hungry;
+        Cleanliness = monsterData.status.cleanliness;
+        Happiness = monsterData.status.happiness;
         overEat = 0;
-        hungrinessTickSpeed = 1f;
-        cleanlinessTickSpeed = 10f;
-        happinessTickSpeed = 1f;
+
+        monsterAsset = DataManager.Instance.StringToMonsteAsset(monsterData.asset);
+        LoadAsset();
+    }
+    public void LoadAsset()
+    {
+        
     }
 }

@@ -150,7 +150,10 @@ namespace GoogleARCore
 
                 if (SessionConfig.AugmentedImageDatabase != null)
                 {
-                    Debug.LogErrorFormat("Augmented Images require back-facing camera.");
+                    if(ArSceneController.Instance != null)
+                    {
+                        ArSceneController.Instance.SetAllowAugmentedImage(false);
+                    }
                 }
             }
 

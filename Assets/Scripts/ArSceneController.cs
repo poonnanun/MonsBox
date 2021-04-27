@@ -15,6 +15,7 @@ public enum GamePhase
     IdlePhase,
     FeedingPhase,
     CleaningPhase,
+    ScanningPhase,
 }
 public enum CleaningPhase
 {
@@ -50,6 +51,8 @@ public class ArSceneController : MonoBehaviour
     private Slider sensitiveXY;
     [SerializeField]
     private Image hungrinessBar, cleanlinessBar, happinessBar;
+    [SerializeField]
+    private GameObject FitToScanOverlay;
 
     private bool isSummoned;
     private bool isGridRemoved;
@@ -58,11 +61,16 @@ public class ArSceneController : MonoBehaviour
     private GameObject currentFeedingCube;
     private GameObject currentBath;
     private MonsterEnvironmentController currentMonsterEnvironment;
+    private MonsterController currentMonster;
     private bool isAllowThrowFood;
     private bool isFoodThrown;
     private bool isAllowSpawnBath;
     private bool isBathSpawned;
     private bool isVariableReset;
+    private bool isAllowAugmentedImage;
+
+    private List<AugmentedImage> _tempAugmentedImages = new List<AugmentedImage>();
+    private List<int> scannedImages = new List<int>();
 
     private const float _prefabRotation = 180.0f;
     public void Awake()
@@ -79,6 +87,11 @@ public class ArSceneController : MonoBehaviour
         mainPanel.SetActive(false);
         hintPanel.SetActive(true);
         sensitiveXY.gameObject.SetActive(false);
+        SoundInitializer.Instance.Init();
+        SoundManager.Instance.Init();
+        SoundManager.Instance.TurnOnBGM(BGSoundName.ArScene);
+
+        LoadMonsterData();
     }
     // Update is called once per frame
     void Update()
@@ -93,6 +106,8 @@ public class ArSceneController : MonoBehaviour
                 if (ActiveGridAndSpawnObject(monsterEnvironmentPrefabs, out GameObject tmp) && tmp != null)
                 {
                     currentMonsterEnvironment = tmp.GetComponent<MonsterEnvironmentController>();
+                    currentMonsterEnvironment.Init(currentMonster);
+                    currentMonster = currentMonsterEnvironment.GetMonster();
                     isSummoned = true;
                     mainPanel.SetActive(true);
                     hintPanel.SetActive(false);
@@ -143,9 +158,8 @@ public class ArSceneController : MonoBehaviour
                 {
                     if (!ThrowableObject.Instance.IsMoving())
                     {
-                        MonsterController currentMons = currentMonsterEnvironment.GetMonster().GetComponent<MonsterController>();
-                        currentMons.MoveTo(ThrowableObject.Instance.transform.position);
-                        currentMons.ChanceActivity(MonsterActivity.FindFood);
+                        currentMonster.MoveTo(ThrowableObject.Instance.transform.position);
+                        currentMonster.ChanceActivity(MonsterActivity.FindFood);
                         ChangeGamePhase(GamePhase.IdlePhase);
                         isFoodThrown = false;
                     }
@@ -185,13 +199,46 @@ public class ArSceneController : MonoBehaviour
             }
             else
             {
-                MonsterController currentMons = currentMonsterEnvironment.GetMonster().GetComponent<MonsterController>();
-                currentMons.MoveTo(currentBath.transform.position);
-                currentMons.ChanceActivity(MonsterActivity.FindBath);
+                currentMonster.MoveTo(currentBath.transform.position);
+                currentMonster.ChanceActivity(MonsterActivity.FindBath);
                 ChangeGamePhase(GamePhase.IdlePhase);
             }
         }
         #endregion
+        #region Scanning
+        else if (_currentGamePhase == GamePhase.ScanningPhase)
+        {
+            Session.GetTrackables<AugmentedImage>(_tempAugmentedImages, TrackableQueryFilter.Updated);
+            if(scannedImages.Count < _tempAugmentedImages.Count)
+            {
+                foreach (var image in _tempAugmentedImages)
+                {
+                    if (scannedImages.Contains(image.DatabaseIndex))
+                    {
+                        continue;
+                    }
+                    if (image.TrackingState == TrackingState.Tracking)
+                    {
+                        // Create an anchor to ensure that ARCore keeps tracking this augmented image.
+                        Anchor anchor = image.CreateAnchor(image.CenterPose);
+                        GameObject visualizer = Instantiate(feedingCube, anchor.transform);
+                        visualizer.transform.localPosition = Vector3.zero;
+                        scannedImages.Add(image.DatabaseIndex);
+                    }
+                }
+            }
+            
+
+            FitToScanOverlay.SetActive(true);
+        }
+        #endregion
+    }
+    public void LoadMonsterData()
+    {
+        MonsterAssetController.Instance.Init();
+        MonsterRawData tmp = DataManager.Instance.GetMonsterById(PlayerController.Instance.CurrentMonsterId);
+        MonsterAsset monsterAsset = DataManager.Instance.StringToMonsteAsset(tmp.asset);
+        currentMonster = MonsterAssetController.Instance.GetModelById(monsterAsset.model);
     }
     private void UpdateApplicationLifecycle()
     {
@@ -305,6 +352,10 @@ public class ArSceneController : MonoBehaviour
         }
         _currentGamePhase = gamePhase;
     }
+    public void SetCurrentMonster(MonsterController mon)
+    {
+        currentMonster = mon;
+    }
     public void EnterFeeding()
     {
         isAllowThrowFood = false;
@@ -319,6 +370,13 @@ public class ArSceneController : MonoBehaviour
             ChangeGamePhase(GamePhase.CleaningPhase);
             planeGenerator.ActiveGridDisplay();
             isGridRemoved = false;
+        }
+    }
+    public void EnterScanning()
+    {
+        if (isAllowAugmentedImage)
+        {
+            ChangeGamePhase(GamePhase.ScanningPhase);
         }
     }
     public void SpawnFood()
@@ -346,6 +404,10 @@ public class ArSceneController : MonoBehaviour
         // instantiate on the indicator
         // Make monster able to get on the tub
         // Have raycast or something to rub the monster to increase cleanliness
+    }
+    public void SetAllowAugmentedImage(bool boo)
+    {
+        isAllowAugmentedImage = boo;
     }
     public void DespawnBathTub()
     {

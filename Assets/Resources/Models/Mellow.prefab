@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 884e644e0bba1df408a7ab1d7d9d2ff8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  walkSoundThreshold: 0
+  id: 1
 --- !u!54 &1467390121757850257
 Rigidbody:
   m_ObjectHideFlags: 0

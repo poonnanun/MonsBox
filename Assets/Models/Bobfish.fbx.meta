@@ -1,29 +1,26 @@
 fileFormatVersion: 2
-guid: bf1e3fd63d8ed304b84487335d21a79d
+guid: 60db20dc122bb8947b6f4bc5065a1687
 ModelImporter:
   serializedVersion: 20101
   internalIDToNameTable:
   - first:
-      74: 3429644653669202616
-    second: Boxkun|Eating
+      74: 5560262153156606908
+    second: bobfish|Eating
   - first:
-      74: -8645678634007323666
-    second: Boxkun|Idle
+      74: -5970005969806217826
+    second: bobfish|Idle
   - first:
-      74: -8146984859681458664
-    second: Boxkun|Interact
+      74: 1041058730426879269
+    second: bobfish|Interact
   - first:
-      74: -5062336437660759079
-    second: Boxkun|PrepareEat
-  - first:
-      74: -1996286232731382599
-    second: Boxkun|Walk
+      74: -8522763685034119020
+    second: bobfish|Walk
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material
-    second: {fileID: 2100000, guid: 794a490e2e5a4d9498742be235d16916, type: 2}
+      name: Base_aqua_color
+    second: {fileID: 2100000, guid: b72a81cbb9f3b8340856bbe330af2a97, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
@@ -52,11 +49,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Boxkun|Eating
-      takeName: Boxkun|Eating
+      name: bobfish|Eating
+      takeName: bobfish|Eating
       internalID: 0
       firstFrame: 0
-      lastFrame: 9
+      lastFrame: 14
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -81,11 +78,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Boxkun|Idle
-      takeName: Boxkun|Idle
+      name: bobfish|Idle
+      takeName: bobfish|Idle
       internalID: 0
       firstFrame: 0
-      lastFrame: 209
+      lastFrame: 94
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -110,8 +107,8 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Boxkun|Interact
-      takeName: Boxkun|Interact
+      name: bobfish|Interact
+      takeName: bobfish|Interact
       internalID: 0
       firstFrame: 0
       lastFrame: 18
@@ -139,40 +136,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Boxkun|PrepareEat
-      takeName: Boxkun|PrepareEat
+      name: bobfish|Walk
+      takeName: bobfish|Walk
       internalID: 0
       firstFrame: 0
-      lastFrame: 4
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: Boxkun|Walk
-      takeName: Boxkun|Walk
-      internalID: 0
-      firstFrame: 0
-      lastFrame: 13
+      lastFrame: 12
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

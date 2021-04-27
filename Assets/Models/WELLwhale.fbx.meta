@@ -5,22 +5,22 @@ ModelImporter:
   internalIDToNameTable:
   - first:
       74: -8741847179151120200
-    second: Armature|eating
+    second: Whale|eating
   - first:
       74: -8945691123924629249
-    second: Armature|Idle
+    second: Whale|Idle
   - first:
       74: 8363436409549982457
-    second: Armature|interact
+    second: Whale|interact
   - first:
       74: -4799524434163024911
-    second: Armature|walk
+    second: Whale|walk
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material
-    second: {fileID: 2100000, guid: 0ce20d0585dacaa4683bfeef5f7c0cba, type: 2}
+    second: {fileID: 2100000, guid: 1bb0113cfc8f8c1429bf5e6b2067cae0, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
@@ -49,7 +49,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Armature|eating
+      name: Whale|eating
       takeName: Armature|eating
       internalID: 0
       firstFrame: 0
@@ -78,7 +78,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Idle
+      name: Whale|Idle
       takeName: Armature|Idle
       internalID: 0
       firstFrame: 0
@@ -107,7 +107,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|interact
+      name: Whale|interact
       takeName: Armature|interact
       internalID: 0
       firstFrame: 0
@@ -136,7 +136,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|walk
+      name: Whale|walk
       takeName: Armature|walk
       internalID: 0
       firstFrame: 0

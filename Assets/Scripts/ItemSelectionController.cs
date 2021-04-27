@@ -4,6 +4,12 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+public enum SelectionType
+{
+    Food = 0,
+    Bath,
+    Minigame,
+}
 public class ItemSelectionController : MonoBehaviour
 {
     [SerializeField]
@@ -20,28 +26,43 @@ public class ItemSelectionController : MonoBehaviour
     private List<FoodScript> itemPool;
     private int selectedItem;
     private List<ItemModel> itemModels;
+    private List<MinigameBase> minigamePool;
     private List<GameObject> createdItem;
-
-    private void Start()
+    private SelectionType currentType;
+    private void Awake()
     {
         createdItem = new List<GameObject>();
-        LoadAllFood();
-        LoadAllModel();
-        selectedItem = 0;
     }
-    public void OpenSelection()
+    public void OpenSelection(SelectionType type)
     {
         gameObject.SetActive(true);
-        LoadAllModel();
+        currentType = type;
+        selectedItem = 0;
+        ItemSelectionHeader.text = type.ToString();
+        if (type == SelectionType.Food)
+        {
+            LoadAllFood();
+            LoadAllFoodModel();
+        }
+        else if(type == SelectionType.Bath)
+        {
+
+        }
+        else if(type == SelectionType.Minigame)
+        {
+            LoadAllMinigame();
+        }
+        
     }
     public void CloseSelection()
     {
         gameObject.SetActive(false);
     }
-    public void DisplayItems()
+    public void DisplayFoodItems()
     {
-        foreach(GameObject des in createdItem)
+        foreach (GameObject des in createdItem)
         {
+            Debug.Log("deleted");
             Destroy(des);
         }
         createdItem.Clear();
@@ -58,27 +79,62 @@ public class ItemSelectionController : MonoBehaviour
             createdItem.Add(tmp);
         }
     }
+    public void DisplayMinigame()
+    {
+        foreach (GameObject des in createdItem)
+        {
+            Destroy(des);
+        }
+        createdItem.Clear();
+        int count = 0;
+
+        foreach (MinigameBase a in minigamePool)
+        {
+            GameObject tmp = Instantiate(prefabs, ItemHolder.transform);
+            tmp.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = a.MinigameName;
+            tmp.transform.GetChild(1).GetComponent<Image>().sprite = a.Image;
+            tmp.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "";
+            int num = count;
+            count++;
+            tmp.GetComponent<Button>().onClick.AddListener(delegate { OnSelectItem(num); });
+            createdItem.Add(tmp);
+        }
+    }
     public void OnSelectItem(int num)
     {
         selectedItem = num;
     }
     public void OnConfirmSelection()
     {
-        string assetId = itemPool[selectedItem].AssetId;
-        GameObject asset = null;
-        foreach(ItemModel a in itemModels)
+        if(currentType == SelectionType.Food)
         {
-            if(a.AssetId == assetId)
+            string assetId = itemPool[selectedItem].AssetId;
+            GameObject asset = null;
+            foreach (ItemModel a in itemModels)
             {
-                asset = a.gameObject;
+                if (a.AssetId == assetId)
+                {
+                    asset = a.gameObject;
+                }
             }
+            if (asset == null)
+            {
+                asset = defaultFood;
+            }
+            CloseSelection();
+            ArSceneController.Instance.StartThrowFood(asset);
         }
-        if(asset == null)
+        else if (currentType == SelectionType.Bath)
         {
-            asset = defaultFood;
+
         }
-        CloseSelection();
-        ArSceneController.Instance.StartThrowFood(asset);
+        else if (currentType == SelectionType.Minigame)
+        {
+            CloseSelection();
+            MinigameController.Instance.SelectMinigame(minigamePool[selectedItem].MinigameId);
+            ArSceneController.Instance.OnEnterMinigame();
+        }
+
     }
     public void PurchaseItem(FoodScript food)
     {
@@ -104,9 +160,9 @@ public class ItemSelectionController : MonoBehaviour
             tmp.LoadData();
             itemPool.Add(tmp);
         }
-        DisplayItems();
+        DisplayFoodItems();
     }
-    public void LoadAllModel()
+    public void LoadAllFoodModel()
     {
         itemModels = new List<ItemModel>();
         foreach (Object a in Resources.LoadAll("items"))
@@ -114,6 +170,12 @@ public class ItemSelectionController : MonoBehaviour
             GameObject b = (GameObject)a;
             itemModels.Add(b.GetComponent<ItemModel>());
         }
+    }
+    public void LoadAllMinigame()
+    {
+        minigamePool = new List<MinigameBase>();
+        minigamePool.AddRange(MinigameController.Instance.GetMinigameList());
+        DisplayMinigame();
     }
     public FoodScript GetFoodFromModelId(string id)
     {

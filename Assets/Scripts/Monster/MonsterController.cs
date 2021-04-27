@@ -18,7 +18,7 @@ public class MonsterController : MonoBehaviour
     [SerializeField]
     private string id;
     [SerializeField]
-    private Animator monsterAnimator;
+    private Animator monsterAnimator ;
 
     private MonsterActivity _currentActivity;
     private Vector3 moveTarget;
@@ -118,7 +118,7 @@ public class MonsterController : MonoBehaviour
                 OnEat(10);
                 ArSceneController.Instance.DestroyCurrentFood();
             }
-            Invoke("ToIdleAnimation", 1f);
+            Invoke("ToIdleAnimation", 1.5f);
             ChanceActivity(MonsterActivity.Idle);
             return;
         }

@@ -605,7 +605,7 @@ MonoBehaviour:
   feedingCube: {fileID: 326326666486168985, guid: 2c85aa3a424806a4282dcddcd96f86d7,
     type: 3}
   cam: {fileID: 491090542}
-  monsterPre: {fileID: 4095622432351379172, guid: db7bc00903e185946b0308b58c35ed58,
+  monsterPre: {fileID: 4095622432351379172, guid: 578aa37212b8cf347962ac39c06d0dff,
     type: 3}
   cameraObjectHoler: {fileID: 1979057125}
   worldObjectHolder: {fileID: 18767804}

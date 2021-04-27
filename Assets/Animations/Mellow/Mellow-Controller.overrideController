@@ -7,17 +7,5 @@ AnimatorOverrideController:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Mellow-Controller
-  m_Controller: {fileID: 9100000, guid: 2452ee465c4465e47bd2e95e5ea4e687, type: 2}
-  m_Clips:
-  - m_OriginalClip: {fileID: 1827226128182048838, guid: 7731356ec9797d047af8c22579455ece,
-      type: 3}
-    m_OverrideClip: {fileID: 9155776963268572491, guid: 6912783556850214c94b5709aa5a75c3,
-      type: 3}
-  - m_OriginalClip: {fileID: 1827226128182048838, guid: 5908744ee543a2c4cab0b63acd8be9f0,
-      type: 3}
-    m_OverrideClip: {fileID: 9155776963268572491, guid: 6912783556850214c94b5709aa5a75c3,
-      type: 3}
-  - m_OriginalClip: {fileID: 1827226128182048838, guid: 72760ba4f8f8413438b295d0fb82fe5c,
-      type: 3}
-    m_OverrideClip: {fileID: 9155776963268572491, guid: 6912783556850214c94b5709aa5a75c3,
-      type: 3}
+  m_Controller: {fileID: 9100000, guid: 7ec1dfcf4eeb050428547c79edabfe7b, type: 2}
+  m_Clips: []

@@ -213,7 +213,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &386257815
 GameObject:
@@ -250,7 +250,9 @@ MonoBehaviour:
   worldObjectHolder: {fileID: 1809644101}
   monsterEnvironmentPrefabs: {fileID: 3836802920120424175, guid: 0b32788936093f74082db98764eaccb2,
     type: 3}
-  mainPanel: {fileID: 1342373329}
+  mainCanvas: {fileID: 1342373329}
+  minigamePanel: {fileID: 5009620434242255569}
+  mainGamePanel: {fileID: 5009620434242255570}
   hintPanel: {fileID: 1619008735}
   planeGenerator: {fileID: 361832306}
   planeIndicator: {fileID: 1714133676964334592, guid: c6dabb8d21b543a4e99ad207702ed310,
@@ -304,7 +306,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4461716624848968, guid: cf498fc35b538884db557f7a9a2c0ef9, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4461716624848968, guid: cf498fc35b538884db557f7a9a2c0ef9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -456,7 +458,7 @@ RectTransform:
   m_Children:
   - {fileID: 686631915}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -626,7 +628,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4430574757597842, guid: c539aa4fa1bac4b4da61761b0699b48b, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4430574757597842, guid: c539aa4fa1bac4b4da61761b0699b48b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -775,7 +777,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1412142084 stripped
 MonoBehaviour:
@@ -1018,7 +1020,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &5009620434242255567
 PrefabInstance:
@@ -1337,6 +1339,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8456922427980183603, guid: 7576d427a7e03c04c99506e446bab42d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 386257816}
     - target: {fileID: 8456922427980183614, guid: 7576d427a7e03c04c99506e446bab42d,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -1411,3 +1418,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96d5e489bee29e8438c25e222031fc02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5009620434242255569 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 418621079604608878, guid: 7576d427a7e03c04c99506e446bab42d,
+    type: 3}
+  m_PrefabInstance: {fileID: 5009620434242255567}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5009620434242255570 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8387740503058453385, guid: 7576d427a7e03c04c99506e446bab42d,
+    type: 3}
+  m_PrefabInstance: {fileID: 5009620434242255567}
+  m_PrefabAsset: {fileID: 0}

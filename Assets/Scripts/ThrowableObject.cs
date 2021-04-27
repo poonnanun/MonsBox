@@ -42,11 +42,13 @@ public class ThrowableObject : MonoBehaviour
         direction = startPos - endPos;
 
         rb.isKinematic = false;
-        rb.AddForce((-direction.x * throwForceXY)+xPos, -direction.y * throwForceXY, zPos);
+        GetComponent<Collider>().enabled = true;
+        rb.AddForce((-direction.x * throwForceXY)+xPos, -direction.y * throwForceXY, zPos, ForceMode.Impulse);
     }
     public  void DevDrop()
     {
         rb.isKinematic = false;
+        GetComponent<Collider>().enabled = true;
         rb.AddForce(Vector3.forward, ForceMode.Impulse);
     }
     public void SetAllowThrow(bool allow)
@@ -57,6 +59,7 @@ public class ThrowableObject : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
+        GetComponent<Collider>().enabled = false;
     }
     public float GetLastThrownZ()
     {

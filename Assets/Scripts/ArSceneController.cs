@@ -16,6 +16,7 @@ public enum GamePhase
     FeedingPhase,
     CleaningPhase,
     ScanningPhase,
+    PlayingPhase,
 }
 public enum CleaningPhase
 {
@@ -34,7 +35,7 @@ public class ArSceneController : MonoBehaviour
     [SerializeField]
     private GameObject monsterEnvironmentPrefabs;
     [SerializeField]
-    private GameObject mainPanel;
+    private GameObject mainCanvas, minigamePanel, mainGamePanel;
     [SerializeField]
     private GameObject hintPanel;
     [SerializeField]
@@ -71,6 +72,9 @@ public class ArSceneController : MonoBehaviour
     private List<int> scannedImages = new List<int>();
 
     private const float _prefabRotation = 180.0f;
+
+    public GameObject MainCanvas { get => mainCanvas; set => mainCanvas = value; }
+
     public void Awake()
     {
         Instance = this;
@@ -82,8 +86,10 @@ public class ArSceneController : MonoBehaviour
     {
         isSummoned = false;
         isGridRemoved = false;
-        mainPanel.SetActive(false);
+        mainCanvas.SetActive(false);
         hintPanel.SetActive(true);
+        minigamePanel.SetActive(true);
+        MinigameController.Instance.ClosePanel();
         SoundInitializer.Instance.Init();
         SoundManager.Instance.Init();
         SoundManager.Instance.TurnOnBGM(BGSoundName.ArScene);
@@ -106,7 +112,7 @@ public class ArSceneController : MonoBehaviour
                     currentMonsterEnvironment.Init(currentMonster);
                     currentMonster = currentMonsterEnvironment.GetMonster();
                     isSummoned = true;
-                    mainPanel.SetActive(true);
+                    mainCanvas.SetActive(true);
                     hintPanel.SetActive(false);
                     _currentIndicator.SetActive(false);
                 }
@@ -224,6 +230,12 @@ public class ArSceneController : MonoBehaviour
                     }
                 }
             }
+        }
+        #endregion
+        #region Playing
+        else if (_currentGamePhase == GamePhase.PlayingPhase)
+        {
+            
         }
         #endregion
     }
@@ -350,10 +362,28 @@ public class ArSceneController : MonoBehaviour
     {
         currentMonster = mon;
     }
+    public MonsterController GetCurrentMonster()
+    {
+        return currentMonster;
+    }
     public void EnterFeeding()
     {
-        itemSelector.OpenSelection();
-        
+        itemSelector.OpenSelection(SelectionType.Food);
+    }
+    public void EnterSelectMinigame()
+    {
+        itemSelector.OpenSelection(SelectionType.Minigame);
+    }
+    public void OnEnterMinigame()
+    {
+        mainGamePanel.SetActive(false);
+        ChangeGamePhase(GamePhase.PlayingPhase);
+    }
+    public void OnFinishMinigame()
+    {
+        mainGamePanel.SetActive(true);
+        MinigameController.Instance.ClosePanel();
+        ChangeGamePhase(GamePhase.IdlePhase);
     }
     public void StartThrowFood(GameObject food)
     {
@@ -390,8 +420,16 @@ public class ArSceneController : MonoBehaviour
     }
     public void ResetVariable()
     {
+        if(cameraObjectHoler.transform.childCount > 0)
+        {
+            for(int i = cameraObjectHoler.transform.childCount-1; i>=0; i--)
+            {
+                Destroy(cameraObjectHoler.transform.GetChild(i).gameObject);
+            }
+        }
         isBathSpawned = false;
         isFoodThrown = false;
+        isVariableReset = true;
     }
     public void SetAllowAugmentedImage(bool boo)
     {
@@ -411,6 +449,10 @@ public class ArSceneController : MonoBehaviour
     public Vector3 GetCurrentCameraPostion()
     {
         return firstPersonCamera.transform.position;
+    }
+    public Camera GetCurrentCamera()
+    {
+        return firstPersonCamera;
     }
     public void SetHungriness(int amount, int max)
     {
@@ -466,5 +508,13 @@ public class ArSceneController : MonoBehaviour
             currentMonsterEnvironment = null;
             Destroy(tmp);
         }
+    }
+    public GameObject GetWorldObjectHolder()
+    {
+        return worldObjectHolder;
+    }
+    public GameObject GetCameraObjectHolder()
+    {
+        return cameraObjectHoler;
     }
 }

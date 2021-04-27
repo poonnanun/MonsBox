@@ -78,6 +78,26 @@ public class MonsterController : MonoBehaviour
         else if (_currentActivity == MonsterActivity.Wander)
         {
             //ArSceneController.Instance.SetNameText("WANDER");
+            if (moveTarget != null)
+            {
+                if (Vector3.Distance(gameObject.transform.position, moveTarget) < 0.17f)
+                {
+                    ToIdleAnimation();
+                }
+                else
+                {
+                    ToWalkAnimation();
+                    Vector3 before = gameObject.transform.position;
+                    gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, moveTarget, Time.deltaTime * moveSpeed/2f);
+                    Vector3 after = gameObject.transform.position;
+                    gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, Quaternion.LookRotation(moveTarget - gameObject.transform.position), Time.deltaTime * turnSpeed);
+                    currentWalkDist += Vector3.Distance(before, after);
+                    if (currentWalkDist >= walkSoundThreshold)
+                    {
+                        SoundManager.Instance.PlayWalkSound();
+                    }
+                }
+            }
         }
         #endregion
         #region FindFood
@@ -144,6 +164,14 @@ public class MonsterController : MonoBehaviour
             }
         }
         #endregion
+    }
+    public void StartWander()
+    {
+        ChanceActivity(MonsterActivity.Wander);
+    }
+    public void StopWander()
+    {
+        ChanceActivity(MonsterActivity.Idle);
     }
     public void OnArrivedAtBath()
     {

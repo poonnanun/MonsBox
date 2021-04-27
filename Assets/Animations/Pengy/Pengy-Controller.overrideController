@@ -6,22 +6,22 @@ AnimatorOverrideController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Turty-Controller
+  m_Name: Pengy-Controller
   m_Controller: {fileID: 9100000, guid: 7ec1dfcf4eeb050428547c79edabfe7b, type: 2}
   m_Clips:
   - m_OriginalClip: {fileID: 3429644653669202616, guid: bf1e3fd63d8ed304b84487335d21a79d,
       type: 3}
-    m_OverrideClip: {fileID: 4913960645396479353, guid: df2a02090b7fd4d4abd28eb63fbd191f,
+    m_OverrideClip: {fileID: 7540182938599042375, guid: 4440a9d8827890e47a754293bc0a5b49,
       type: 3}
   - m_OriginalClip: {fileID: -8645678634007323666, guid: bf1e3fd63d8ed304b84487335d21a79d,
       type: 3}
-    m_OverrideClip: {fileID: 8258692266163067246, guid: df2a02090b7fd4d4abd28eb63fbd191f,
+    m_OverrideClip: {fileID: -8885528339509854547, guid: 4440a9d8827890e47a754293bc0a5b49,
       type: 3}
   - m_OriginalClip: {fileID: -8146984859681458664, guid: bf1e3fd63d8ed304b84487335d21a79d,
       type: 3}
-    m_OverrideClip: {fileID: -8148222300198426044, guid: df2a02090b7fd4d4abd28eb63fbd191f,
+    m_OverrideClip: {fileID: -8020263697737443206, guid: 4440a9d8827890e47a754293bc0a5b49,
       type: 3}
   - m_OriginalClip: {fileID: -1996286232731382599, guid: bf1e3fd63d8ed304b84487335d21a79d,
       type: 3}
-    m_OverrideClip: {fileID: 2931156753368580824, guid: df2a02090b7fd4d4abd28eb63fbd191f,
+    m_OverrideClip: {fileID: -2281880293599725356, guid: 4440a9d8827890e47a754293bc0a5b49,
       type: 3}

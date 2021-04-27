@@ -1,15 +1,14 @@
 fileFormatVersion: 2
-guid: 6912783556850214c94b5709aa5a75c3
+guid: 85664b3259f4eba4fb9e0236a18ab31f
 ModelImporter:
   serializedVersion: 20101
-  internalIDToNameTable:
+  internalIDToNameTable: []
+  externalObjects:
   - first:
-      74: 3412686074432243547
-    second: Mellow|ArmatureAction
-  - first:
-      74: 9155776963268572491
-    second: Mellow|Idle-sleepy
-  externalObjects: {}
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: bcd62425dcdde6747bcd7f9df31b0f3c, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0

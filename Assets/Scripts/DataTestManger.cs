@@ -45,7 +45,6 @@ public class DataTestManger : MonoBehaviour
                 Debug.Log(tmp.GetMonsterByNumber(0).ToString());
                 SetAllData(tmp.GetMonsterByNumber(1));
             }
-            
         }
     }
     public void SetAllData(MonsterRawData data)

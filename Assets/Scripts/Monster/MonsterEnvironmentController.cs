@@ -6,18 +6,23 @@ public class MonsterEnvironmentController : MonoBehaviour
 {
     public static MonsterEnvironmentController Instance;
     [SerializeField]
-    private GameObject plane, monster;
+    private GameObject plane;
 
+    private MonsterController currentMonster;
     private void Awake()
     {
         Instance = this;
     }
+    public void Init(MonsterController mon)
+    {
+        currentMonster = Instantiate(mon, transform.position, Quaternion.identity, transform);
+    }
     public Vector3 GetMonsterPosition()
     {
-        return monster.transform.position;
+        return currentMonster.transform.position;
     }
-    public GameObject GetMonster()
+    public MonsterController GetMonster()
     {
-        return monster;
+        return currentMonster;
     }
 }

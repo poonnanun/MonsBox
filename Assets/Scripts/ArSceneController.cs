@@ -61,6 +61,7 @@ public class ArSceneController : MonoBehaviour
     private GameObject currentFeedingCube;
     private GameObject currentBath;
     private MonsterEnvironmentController currentMonsterEnvironment;
+    private MonsterController currentMonster;
     private bool isAllowThrowFood;
     private bool isFoodThrown;
     private bool isAllowSpawnBath;
@@ -89,6 +90,8 @@ public class ArSceneController : MonoBehaviour
         SoundInitializer.Instance.Init();
         SoundManager.Instance.Init();
         SoundManager.Instance.TurnOnBGM(BGSoundName.ArScene);
+
+        LoadMonsterData();
     }
     // Update is called once per frame
     void Update()
@@ -103,6 +106,8 @@ public class ArSceneController : MonoBehaviour
                 if (ActiveGridAndSpawnObject(monsterEnvironmentPrefabs, out GameObject tmp) && tmp != null)
                 {
                     currentMonsterEnvironment = tmp.GetComponent<MonsterEnvironmentController>();
+                    currentMonsterEnvironment.Init(currentMonster);
+                    currentMonster = currentMonsterEnvironment.GetMonster();
                     isSummoned = true;
                     mainPanel.SetActive(true);
                     hintPanel.SetActive(false);
@@ -153,9 +158,8 @@ public class ArSceneController : MonoBehaviour
                 {
                     if (!ThrowableObject.Instance.IsMoving())
                     {
-                        MonsterController currentMons = currentMonsterEnvironment.GetMonster().GetComponent<MonsterController>();
-                        currentMons.MoveTo(ThrowableObject.Instance.transform.position);
-                        currentMons.ChanceActivity(MonsterActivity.FindFood);
+                        currentMonster.MoveTo(ThrowableObject.Instance.transform.position);
+                        currentMonster.ChanceActivity(MonsterActivity.FindFood);
                         ChangeGamePhase(GamePhase.IdlePhase);
                         isFoodThrown = false;
                     }
@@ -195,9 +199,8 @@ public class ArSceneController : MonoBehaviour
             }
             else
             {
-                MonsterController currentMons = currentMonsterEnvironment.GetMonster().GetComponent<MonsterController>();
-                currentMons.MoveTo(currentBath.transform.position);
-                currentMons.ChanceActivity(MonsterActivity.FindBath);
+                currentMonster.MoveTo(currentBath.transform.position);
+                currentMonster.ChanceActivity(MonsterActivity.FindBath);
                 ChangeGamePhase(GamePhase.IdlePhase);
             }
         }
@@ -229,6 +232,13 @@ public class ArSceneController : MonoBehaviour
             FitToScanOverlay.SetActive(true);
         }
         #endregion
+    }
+    public void LoadMonsterData()
+    {
+        MonsterAssetController.Instance.Init();
+        MonsterRawData tmp = DataManager.Instance.GetMonsterById(PlayerController.Instance.CurrentMonsterId);
+        MonsterAsset monsterAsset = DataManager.Instance.StringToMonsteAsset(tmp.asset);
+        currentMonster = MonsterAssetController.Instance.GetModelById(monsterAsset.model);
     }
     private void UpdateApplicationLifecycle()
     {
@@ -341,6 +351,10 @@ public class ArSceneController : MonoBehaviour
             isVariableReset = false;
         }
         _currentGamePhase = gamePhase;
+    }
+    public void SetCurrentMonster(MonsterController mon)
+    {
+        currentMonster = mon;
     }
     public void EnterFeeding()
     {

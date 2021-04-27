@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSoundThreshold: 0
   id: 0
+  monsterAnimator: {fileID: 333201996542804523}
 --- !u!54 &1467390121757850257
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -189,6 +190,12 @@ PrefabInstance:
 --- !u!4 &7644234414573367121 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 08cbfae26931dca4ab849f4e62e38d6f,
+    type: 3}
+  m_PrefabInstance: {fileID: 3418076521211855947}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &333201996542804523 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: -6057140222963153312, guid: 08cbfae26931dca4ab849f4e62e38d6f,
     type: 3}
   m_PrefabInstance: {fileID: 3418076521211855947}
   m_PrefabAsset: {fileID: 0}

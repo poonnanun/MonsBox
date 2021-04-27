@@ -17,6 +17,8 @@ public class MonsterController : MonoBehaviour
     private float walkSoundThreshold;
     [SerializeField]
     private string id;
+    [SerializeField]
+    private Animator monsterAnimator;
 
     private MonsterActivity _currentActivity;
     private Vector3 moveTarget;
@@ -56,7 +58,7 @@ public class MonsterController : MonoBehaviour
         {
             LoadData();
         }
-        
+        ToIdleAnimation();
     }
 
     void Update()
@@ -84,6 +86,7 @@ public class MonsterController : MonoBehaviour
             //ArSceneController.Instance.SetNameText("FINDFOOD");
             if (moveTarget != null)
             {
+                ToWalkAnimation();
                 Vector3 before = gameObject.transform.position;
                 gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, moveTarget, Time.deltaTime * moveSpeed);
                 Vector3 after = gameObject.transform.position;
@@ -105,6 +108,8 @@ public class MonsterController : MonoBehaviour
         else if (_currentActivity == MonsterActivity.Eating)
         {
             // play animation here
+            ToIdleAnimation();
+            ToEat();
             //ArSceneController.Instance.SetNameText("EATING");
             if (!GameConfig.isTest)
             {
@@ -112,6 +117,7 @@ public class MonsterController : MonoBehaviour
                 OnEat(food.FullnessAmount);
                 ArSceneController.Instance.DestroyCurrentFood();
             }
+            Invoke("ToIdleAnimation", 1f);
             ChanceActivity(MonsterActivity.Idle);
             return;
         }
@@ -121,6 +127,7 @@ public class MonsterController : MonoBehaviour
         {
             if (moveTarget != null)
             {
+                ToWalkAnimation();
                 gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, moveTarget, Time.deltaTime * moveSpeed);
                 gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, Quaternion.LookRotation(moveTarget - gameObject.transform.position), Time.deltaTime * turnSpeed);
             }
@@ -131,6 +138,7 @@ public class MonsterController : MonoBehaviour
         {
             if (isFinishBathing)
             {
+                ToIdleAnimation();
                 ChanceActivity(MonsterActivity.Idle);
             }
         }
@@ -199,5 +207,22 @@ public class MonsterController : MonoBehaviour
     public void LoadAsset()
     {
         
+    }
+    public void ToIdleAnimation()
+    {
+        monsterAnimator.SetBool("isWalk", false);
+        monsterAnimator.SetBool("isEating", false);
+    }
+    public void ToWalkAnimation()
+    {
+        monsterAnimator.SetBool("isWalk", true);
+    }
+    public void ToInteraction()
+    {
+        monsterAnimator.SetTrigger("IsInteract");
+    }
+    public void ToEat()
+    {
+        monsterAnimator.SetBool("isEating", true);
     }
 }

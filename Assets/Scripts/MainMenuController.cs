@@ -69,10 +69,6 @@ public class MainMenuController : MonoBehaviour
             SceneManager.LoadScene("ArScene", LoadSceneMode.Single);
         }        
     }
-    public void OnClickCreatMonster()
-    {
-
-    }
     public void OpenLoginPanel()
     {
         LoginPanel.SetActive(true);

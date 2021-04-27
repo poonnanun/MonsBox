@@ -6,22 +6,22 @@ AnimatorOverrideController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Turty-controller
+  m_Name: Aves-Controller
   m_Controller: {fileID: 9100000, guid: 7ec1dfcf4eeb050428547c79edabfe7b, type: 2}
   m_Clips:
   - m_OriginalClip: {fileID: 3429644653669202616, guid: bf1e3fd63d8ed304b84487335d21a79d,
       type: 3}
-    m_OverrideClip: {fileID: 4913960645396479353, guid: df2a02090b7fd4d4abd28eb63fbd191f,
+    m_OverrideClip: {fileID: 2627997587857662584, guid: 9d0fa36147acca844a940dd9fbb7d453,
       type: 3}
   - m_OriginalClip: {fileID: -8645678634007323666, guid: bf1e3fd63d8ed304b84487335d21a79d,
       type: 3}
-    m_OverrideClip: {fileID: 8258692266163067246, guid: df2a02090b7fd4d4abd28eb63fbd191f,
+    m_OverrideClip: {fileID: -7975986350885127278, guid: 9d0fa36147acca844a940dd9fbb7d453,
       type: 3}
   - m_OriginalClip: {fileID: -8146984859681458664, guid: bf1e3fd63d8ed304b84487335d21a79d,
       type: 3}
-    m_OverrideClip: {fileID: -8148222300198426044, guid: df2a02090b7fd4d4abd28eb63fbd191f,
+    m_OverrideClip: {fileID: -4891167532099753030, guid: 9d0fa36147acca844a940dd9fbb7d453,
       type: 3}
   - m_OriginalClip: {fileID: -1996286232731382599, guid: bf1e3fd63d8ed304b84487335d21a79d,
       type: 3}
-    m_OverrideClip: {fileID: 2931156753368580824, guid: df2a02090b7fd4d4abd28eb63fbd191f,
+    m_OverrideClip: {fileID: 5958663713970220092, guid: 9d0fa36147acca844a940dd9fbb7d453,
       type: 3}

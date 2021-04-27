@@ -6,7 +6,7 @@ AnimatorOverrideController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Wellwhale-Controller
+  m_Name: Wellwhale-controller
   m_Controller: {fileID: 9100000, guid: 7ec1dfcf4eeb050428547c79edabfe7b, type: 2}
   m_Clips:
   - m_OriginalClip: {fileID: 3429644653669202616, guid: bf1e3fd63d8ed304b84487335d21a79d,

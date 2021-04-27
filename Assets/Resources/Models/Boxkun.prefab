@@ -10,7 +10,7 @@ Animator:
   m_GameObject: {fileID: 5851487042535247}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7ec1dfcf4eeb050428547c79edabfe7b, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -67,6 +67,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSoundThreshold: 0
   id: 2
+  monsterAnimator: {fileID: 6575486123074368909}
 --- !u!54 &1467390121757850257
 Rigidbody:
   m_ObjectHideFlags: 0

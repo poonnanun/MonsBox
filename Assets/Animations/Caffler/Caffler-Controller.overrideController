@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Caffler-Controller
+  m_Controller: {fileID: 9100000, guid: 7ec1dfcf4eeb050428547c79edabfe7b, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 3429644653669202616, guid: bf1e3fd63d8ed304b84487335d21a79d,
+      type: 3}
+    m_OverrideClip: {fileID: -7332363395217891625, guid: 3b5100eb5ff06444abfd4630692eb101,
+      type: 3}
+  - m_OriginalClip: {fileID: -8645678634007323666, guid: bf1e3fd63d8ed304b84487335d21a79d,
+      type: 3}
+    m_OverrideClip: {fileID: -6633812985721030134, guid: 3b5100eb5ff06444abfd4630692eb101,
+      type: 3}
+  - m_OriginalClip: {fileID: -8146984859681458664, guid: bf1e3fd63d8ed304b84487335d21a79d,
+      type: 3}
+    m_OverrideClip: {fileID: 606414370714455156, guid: 3b5100eb5ff06444abfd4630692eb101,
+      type: 3}
+  - m_OriginalClip: {fileID: -1996286232731382599, guid: bf1e3fd63d8ed304b84487335d21a79d,
+      type: 3}
+    m_OverrideClip: {fileID: -6927541153594207740, guid: 3b5100eb5ff06444abfd4630692eb101,
+      type: 3}

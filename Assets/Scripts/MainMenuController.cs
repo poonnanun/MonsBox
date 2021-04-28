@@ -19,6 +19,8 @@ public class MainMenuController : MonoBehaviour
     private TextMeshProUGUI loginHeader;
     [SerializeField]
     private TextMeshProUGUI uidDisplayText;
+    [SerializeField]
+    private List<Sprite> monsterImages;
 
     private readonly int maximumMonster = 12;
     private List<GameObject> monstersGrid;
@@ -53,6 +55,7 @@ public class MainMenuController : MonoBehaviour
             GameObject obj = Instantiate(mainMenuIconPrefabs, monsterHolder.transform);
             monstersGrid.Add(obj);
             obj.transform.Find("MonsterName").GetComponent<TextMeshProUGUI>().text = tmp.name;
+            obj.transform.Find("MonsterImage").GetComponent<Image>().sprite = monsterImages[int.Parse(DataManager.Instance.StringToMonsteAsset(tmp.asset).model)];
             int num = i;
             obj.GetComponent<Button>().onClick.AddListener(delegate { OnSelectMonster(num); });
         }
@@ -72,9 +75,16 @@ public class MainMenuController : MonoBehaviour
     }
     public void OpenLoginPanel()
     {
-        LoginPanel.SetActive(true);
-        loginLoadPanel.SetActive(false);
-        loginHeader.text = "Login";
+        if(PlayerController.Instance != null && PlayerController.Instance.Uid != null && PlayerController.Instance.Uid.Length > 0)
+        {
+            GetAllMonsterData();
+        }
+        else
+        {
+            LoginPanel.SetActive(true);
+            loginLoadPanel.SetActive(false);
+            loginHeader.text = "Login";
+        }
     }
     public void CloseLoginPanel()
     {

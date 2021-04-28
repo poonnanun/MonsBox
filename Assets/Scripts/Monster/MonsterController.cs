@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
+using Input = GoogleARCore.InstantPreviewInput;
+#endif
 
 public enum MonsterActivity
 {
@@ -11,6 +14,7 @@ public enum MonsterActivity
     FindBath,
     Bathing
 }
+
 public class MonsterController : MonoBehaviour
 {
     [SerializeField]
@@ -30,7 +34,7 @@ public class MonsterController : MonoBehaviour
     private int happiness, maxHappiness;
 
     private bool isFinishBathing;
-    private readonly int rubThreshold = 10;
+    private readonly int rubThreshold = 100;
     private int rubCount;
 
     private MonsterRawData monsterData;
@@ -38,6 +42,8 @@ public class MonsterController : MonoBehaviour
 
     private readonly float LoadDataInteraval = 60f;
     private float loadDataCount;
+    private Vector3 idleFaceTo;
+    private bool allowLookCam;
 
     private Rigidbody rb;
     public int Hungriness { get => hungriness; set => hungriness = value; }
@@ -84,6 +90,12 @@ public class MonsterController : MonoBehaviour
         {
             //ArSceneController.Instance.SetNameText("IDLE");
             ResetVariable();
+            if (allowLookCam)
+            {
+                gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, Quaternion.LookRotation(idleFaceTo - gameObject.transform.position), Time.deltaTime * turnSpeed);
+            }
+            
+            
         }
         #endregion
         #region Wander
@@ -174,8 +186,31 @@ public class MonsterController : MonoBehaviour
                 ToIdleAnimation();
                 ChanceActivity(MonsterActivity.Idle);
             }
+            else
+            {
+                if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
+                {
+                    Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+                    if (Physics.Raycast(ray, out RaycastHit hit, 100))
+                    {
+                        if (hit.transform.CompareTag("Monster"))
+                        {
+                            rubCount += 1;
+                            if(rubCount >= rubThreshold)
+                            {
+                                ToIdleAnimation();
+                                ArSceneController.Instance.FinishBating();
+                            }
+                        }
+                    }
+                }
+            }
         }
         #endregion
+    }
+    public void StopLooking()
+    {
+        allowLookCam = false;
     }
     public void RefreshData()
     {
@@ -201,6 +236,13 @@ public class MonsterController : MonoBehaviour
     public void ChanceActivity(MonsterActivity act)
     {
         _currentActivity = act;
+        if(act == MonsterActivity.Idle)
+        {
+            allowLookCam = true;
+            idleFaceTo = ArSceneController.Instance.GetCurrentCameraPostion();
+            idleFaceTo = new Vector3(idleFaceTo.x, gameObject.transform.position.y, idleFaceTo.z);
+            Invoke("StopLooking", 0.5f);
+        }
     }
     public void SetKinematic(bool boo)
     {

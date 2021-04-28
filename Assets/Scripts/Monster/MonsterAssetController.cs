@@ -5,8 +5,15 @@ using UnityEngine;
 public enum MonsterId
 {
     slime = 0,
+    Aves,
+    Boxkun,
+    Bobfish,
+    Eyench,
+    Pengy,
+    Cear,
     Mellow,
-    Boxkun
+    Turty,
+    Wellwhale
 }
 public class MonsterAssetController : MonoBehaviour
 {

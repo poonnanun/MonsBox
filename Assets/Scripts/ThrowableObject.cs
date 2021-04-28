@@ -43,7 +43,7 @@ public class ThrowableObject : MonoBehaviour
 
         rb.isKinematic = false;
         GetComponent<Collider>().enabled = true;
-        rb.AddForce((-direction.x * throwForceXY)+xPos, -direction.y * throwForceXY, zPos, ForceMode.Impulse);
+        rb.AddForce((-direction.x * throwForceXY)+xPos, -direction.y * throwForceXY, zPos);
     }
     public  void DevDrop()
     {

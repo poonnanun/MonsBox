@@ -62,7 +62,6 @@ public class ItemSelectionController : MonoBehaviour
     {
         foreach (GameObject des in createdItem)
         {
-            Debug.Log("deleted");
             Destroy(des);
         }
         createdItem.Clear();

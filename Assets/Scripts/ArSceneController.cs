@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 #if UNITY_EDITOR
 using Input = GoogleARCore.InstantPreviewInput;
@@ -121,6 +122,7 @@ public class ArSceneController : MonoBehaviour
             {
                 planeGenerator.DeactiveGridDisplay();
                 isGridRemoved = true;
+                currentMonster.ChanceActivity(MonsterActivity.Idle);
                 ChangeGamePhase(GamePhase.IdlePhase);
             }
         }
@@ -132,19 +134,6 @@ public class ArSceneController : MonoBehaviour
             if (!isVariableReset)
             {
                 ResetVariable();
-            }
-            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
-            {
-                Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
-                if (Physics.Raycast(ray, out RaycastHit hit, 100))
-                {
-                    if (hit.transform.CompareTag("Monster"))
-                    {
-                        hit.transform.GetComponent<MonsterController>().AddHappiness();
-                        // do something
-                    }
-                    SetNameText(hit.transform.tag);
-                }
             }
         }
         #endregion
@@ -405,6 +394,12 @@ public class ArSceneController : MonoBehaviour
             isGridRemoved = false;
         }
     }
+    public void FinishBating()
+    {
+        ChangeGamePhase(GamePhase.IdlePhase);
+        currentBath.GetComponent<BathScript>().ExitBathTub();
+        DespawnBathTub();
+    }
     public void EnterScanning()
     {
         if (isAllowAugmentedImage)
@@ -520,5 +515,9 @@ public class ArSceneController : MonoBehaviour
     public GameObject GetCameraObjectHolder()
     {
         return cameraObjectHoler;
+    }
+    public void BackToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
     }
 }

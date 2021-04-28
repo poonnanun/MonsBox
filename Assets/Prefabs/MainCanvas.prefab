@@ -5615,6 +5615,27 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8456922427341478941}
     m_Modifications:
+    - target: {fileID: 155003764325007305, guid: 36ab4b643720bdd40becf1edc91d8865,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: f89d819d189ac8340a12a13860746e63,
+        type: 3}
+    - target: {fileID: 155003764325007305, guid: 36ab4b643720bdd40becf1edc91d8865,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.18039216
+      objectReference: {fileID: 0}
+    - target: {fileID: 155003764325007305, guid: 36ab4b643720bdd40becf1edc91d8865,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.18039216
+      objectReference: {fileID: 0}
+    - target: {fileID: 155003764325007305, guid: 36ab4b643720bdd40becf1edc91d8865,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.18039216
+      objectReference: {fileID: 0}
     - target: {fileID: 155003764325007306, guid: 36ab4b643720bdd40becf1edc91d8865,
         type: 3}
       propertyPath: m_Pivot.x
@@ -5653,12 +5674,12 @@ PrefabInstance:
     - target: {fileID: 155003764325007306, guid: 36ab4b643720bdd40becf1edc91d8865,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: -20
+      value: -30
       objectReference: {fileID: 0}
     - target: {fileID: 155003764325007306, guid: 36ab4b643720bdd40becf1edc91d8865,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: -20
+      value: -30
       objectReference: {fileID: 0}
     - target: {fileID: 155003764325007306, guid: 36ab4b643720bdd40becf1edc91d8865,
         type: 3}
@@ -6219,6 +6240,27 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8456922427935287936}
     m_Modifications:
+    - target: {fileID: 155003764325007305, guid: 36ab4b643720bdd40becf1edc91d8865,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b03ca5afec0dcf94393276bf9c40e097,
+        type: 3}
+    - target: {fileID: 155003764325007305, guid: 36ab4b643720bdd40becf1edc91d8865,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.1792453
+      objectReference: {fileID: 0}
+    - target: {fileID: 155003764325007305, guid: 36ab4b643720bdd40becf1edc91d8865,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.1792453
+      objectReference: {fileID: 0}
+    - target: {fileID: 155003764325007305, guid: 36ab4b643720bdd40becf1edc91d8865,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.1792453
+      objectReference: {fileID: 0}
     - target: {fileID: 155003764325007306, guid: 36ab4b643720bdd40becf1edc91d8865,
         type: 3}
       propertyPath: m_Pivot.x

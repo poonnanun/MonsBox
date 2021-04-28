@@ -65,10 +65,7 @@ public class MonsterController : MonoBehaviour
         loadDataCount = 0;
 
         rb = GetComponent<Rigidbody>();
-        if (!GameConfig.isTest)
-        {
-            LoadData();
-        }
+        LoadData();
         //StartCoroutine(DataManager.Instance.Evolve(this));
         ToIdleAnimation();
     }
@@ -274,6 +271,12 @@ public class MonsterController : MonoBehaviour
     public void LoadData()
     {
         monsterData = DataManager.Instance.GetMonsterById(PlayerController.Instance.CurrentMonsterId);
+        if (ArSceneController.Instance != null)
+        {
+            ArSceneController.Instance.SetNameText(monsterData.name);
+        }
+
+
         MaxHungriness = monsterData.status.hungry.maxValue;
         MaxCleanliness = monsterData.status.cleanliness.maxValue;
         MaxHappiness = monsterData.status.happiness.maxValue;

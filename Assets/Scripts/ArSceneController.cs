@@ -234,6 +234,7 @@ public class ArSceneController : MonoBehaviour
         MonsterRawData tmp = DataManager.Instance.GetMonsterById(PlayerController.Instance.CurrentMonsterId);
         MonsterAsset monsterAsset = DataManager.Instance.StringToMonsteAsset(tmp.asset);
         currentMonster = MonsterAssetController.Instance.GetModelById(monsterAsset.model);
+        
     }
     private void UpdateApplicationLifecycle()
     {

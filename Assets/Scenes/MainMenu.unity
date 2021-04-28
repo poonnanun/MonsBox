@@ -2243,16 +2243,18 @@ MonoBehaviour:
   loginHeader: {fileID: 864115719}
   uidDisplayText: {fileID: 1382772091}
   monsterImages:
-  - {fileID: 21300000, guid: 104ac91a7d2cc1c4d998c36089f6c0b4, type: 3}
-  - {fileID: 21300000, guid: a8d2301aa9db2614fb9decd6f5c61f72, type: 3}
   - {fileID: 21300000, guid: 91c1d45264fd4f14bad842e4529470e3, type: 3}
+  - {fileID: 21300000, guid: a8d2301aa9db2614fb9decd6f5c61f72, type: 3}
+  - {fileID: 21300000, guid: 8f5d4c4d9bb73a54698b3dd7c27c3502, type: 3}
   - {fileID: 21300000, guid: f48cbd2173284124b996d26c3c5f8aec, type: 3}
   - {fileID: 21300000, guid: e513e69f3479fce49a1a7667b308c2a4, type: 3}
   - {fileID: 21300000, guid: 4035445df7340f747aa9e8e7845e3cb8, type: 3}
-  - {fileID: 21300000, guid: 8f5d4c4d9bb73a54698b3dd7c27c3502, type: 3}
   - {fileID: 21300000, guid: 7c5fb1f0625a0ab43bf1227e7a68a311, type: 3}
+  - {fileID: 21300000, guid: bafa99fdcc145d34d9b074c94a8ce6f0, type: 3}
   - {fileID: 21300000, guid: bab19b2eac2e97b4e819eff2f1b129de, type: 3}
   - {fileID: 21300000, guid: 18da05ad8dcf71d4891a4b42da35cfd6, type: 3}
+  loginLoadingIconImage: {fileID: 123103714}
+  monsterLoadingIconImage: {fileID: 1821435534}
 --- !u!4 &887203247
 Transform:
   m_ObjectHideFlags: 0

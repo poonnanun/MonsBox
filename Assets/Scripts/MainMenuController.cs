@@ -21,17 +21,15 @@ public class MainMenuController : MonoBehaviour
     private TextMeshProUGUI uidDisplayText;
     [SerializeField]
     private List<Sprite> monsterImages;
+    [SerializeField]
+    private GameObject loginLoadingIconImage, monsterLoadingIconImage;
 
     private readonly int maximumMonster = 12;
-    private Transform loginLoadingIconImage;
-    private Transform monsterLoadingIconImage;
     private List<GameObject> monstersGrid;
     private int currentSelectedMonster;
     private void Start()
     {
         OpenLoginPanel();
-        loginLoadingIconImage = loginLoadPanel.GetComponent<GameObject>().transform.Find("LoadingIcon") as RectTransform;
-        monsterLoadingIconImage = monsterLoadPanel.GetComponent<GameObject>().transform.Find("LoadingIcon") as RectTransform;
         monstersGrid = new List<GameObject>();
         currentSelectedMonster = 0;
     }
@@ -39,11 +37,11 @@ public class MainMenuController : MonoBehaviour
     {
         if (loginLoadPanel == true)
         {
-            loginLoadingIconImage.Rotate(new Vector3(0, 0, -10));
+            loginLoadingIconImage.transform.Rotate(new Vector3(0, 0, -10));
         }
         if (monsterLoadPanel == true)
         {
-            monsterLoadingIconImage.Rotate(new Vector3(0, 0, -10));
+            monsterLoadingIconImage.transform.Rotate(new Vector3(0, 0, -10));
         }
     }
     public void GetAllMonsterData()
@@ -95,7 +93,7 @@ public class MainMenuController : MonoBehaviour
             LoginPanel.SetActive(true);
             loginLoadPanel.SetActive(false);
             loginHeader.text = "Login";
-            loginLoadingIconImage.Rotate(new Vector3(0, 0, 0));
+            loginLoadingIconImage.transform.Rotate(new Vector3(0, 0, 0));
         }
     }
     public void CloseLoginPanel()

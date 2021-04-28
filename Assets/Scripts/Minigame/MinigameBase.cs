@@ -39,10 +39,6 @@ public class MinigameBase : MonoBehaviour
     public string MinigameName { get => minigameName; set => minigameName = value; }
     public Sprite Image { get => image; set => image = value; }
 
-    private void Awake()
-    {
-        currentTime = timelimit;
-    }
     private void Update()
     {
         if (IsStarted)
@@ -55,6 +51,8 @@ public class MinigameBase : MonoBehaviour
     {
         IsFinishSetup = true;
         IsStarted = false;
+        score = 0;
+        currentTime = timelimit;
         HighScore = GetCurrentHighScore();
     }
     public virtual void OnEveryFrame() { }

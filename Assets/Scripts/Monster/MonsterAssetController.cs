@@ -4,14 +4,14 @@ using UnityEngine;
 
 public enum MonsterId
 {
-    slime = 0,
+    Boxkun = 0,
     Aves,
-    Boxkun,
+    Cear,
     Bobfish,
     Eyench,
     Pengy,
-    Cear,
     Mellow,
+    Caffler,
     Turty,
     Wellwhale
 }

@@ -66,7 +66,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSoundThreshold: 0
-  id: 2
+  id: 0
   monsterAnimator: {fileID: 6575486123074368909}
 --- !u!54 &1467390121757850257
 Rigidbody:

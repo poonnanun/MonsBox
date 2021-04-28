@@ -23,17 +23,28 @@ public class MainMenuController : MonoBehaviour
     private List<Sprite> monsterImages;
 
     private readonly int maximumMonster = 12;
+    private Transform loginLoadingIconImage;
+    private Transform monsterLoadingIconImage;
     private List<GameObject> monstersGrid;
     private int currentSelectedMonster;
     private void Start()
     {
         OpenLoginPanel();
+        loginLoadingIconImage = loginLoadPanel.GetComponent<GameObject>().transform.Find("LoadingIcon") as RectTransform;
+        monsterLoadingIconImage = monsterLoadPanel.GetComponent<GameObject>().transform.Find("LoadingIcon") as RectTransform;
         monstersGrid = new List<GameObject>();
         currentSelectedMonster = 0;
     }
     private void Update()
     {
-
+        if (loginLoadPanel == true)
+        {
+            loginLoadingIconImage.Rotate(new Vector3(0, 0, -10));
+        }
+        if (monsterLoadPanel == true)
+        {
+            monsterLoadingIconImage.Rotate(new Vector3(0, 0, -10));
+        }
     }
     public void GetAllMonsterData()
     {
@@ -84,6 +95,7 @@ public class MainMenuController : MonoBehaviour
             LoginPanel.SetActive(true);
             loginLoadPanel.SetActive(false);
             loginHeader.text = "Login";
+            loginLoadingIconImage.Rotate(new Vector3(0, 0, 0));
         }
     }
     public void CloseLoginPanel()
@@ -93,6 +105,7 @@ public class MainMenuController : MonoBehaviour
     public void OpenLoginLoading()
     {
         loginLoadPanel.SetActive(true);
+
     }
     public void OpenCreateMonPanel()
     {
@@ -110,7 +123,7 @@ public class MainMenuController : MonoBehaviour
     {
         if(loginHeader.text == "Login")
         {
-            loginHeader.text = "Register";
+            loginHeader.text = "Sign up";
         }
         else
         {
